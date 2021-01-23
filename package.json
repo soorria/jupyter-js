@@ -1,0 +1,35 @@
+{
+  "name": "with-typescript",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start",
+    "type-check": "tsc"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^1.1.5",
+    "@emotion/react": "^11.1.4",
+    "@emotion/styled": "^11.0.0",
+    "@types/mongoose": "^5.10.3",
+    "framer-motion": "^3.2.1",
+    "mongodb": "^3.6.3",
+    "mongoose": "^5.11.13",
+    "morgan": "^1.10.0",
+    "next": "latest",
+    "next-auth": "^3.1.0",
+    "next-connect": "^0.9.1",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-icons": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/morgan": "^1.9.2",
+    "@types/next-auth": "^3.1.21",
+    "@types/node": "^12.12.21",
+    "@types/react": "^16.9.16",
+    "@types/react-dom": "^16.9.4",
+    "typescript": "4.0"
+  },
+  "license": "MIT"
+}
