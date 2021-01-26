@@ -1,1 +1,1 @@
-export * from './next-connect'
+export * from './router'

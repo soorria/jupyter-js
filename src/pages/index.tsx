@@ -1,17 +1,17 @@
-import { Box, Button } from '@chakra-ui/react'
-import { signin, useSession } from 'next-auth/client'
-import { FiGithub } from 'react-icons/fi'
+import MainLayout from '#src/components/layout/MainLayout'
+import { __dev__, __is_client__ } from '#src/constants'
+import { Box } from '@chakra-ui/react'
+import { useSession } from 'next-auth/client'
 
 const IndexPage: React.FC = () => {
-  const [session] = useSession()
+  const [session, loading] = useSession()
 
   return (
-    <Box>
-      <Button onClick={() => signin('github')} leftIcon={<FiGithub />}>
-        Sign in with Github
-      </Button>
-      <Box as="pre">{JSON.stringify(session, null, 2)}</Box>
-    </Box>
+    <MainLayout>
+      <Box p={4}>
+        <Box as="pre">{JSON.stringify({ session, loading }, null, 2)}</Box>
+      </Box>
+    </MainLayout>
   )
 }
 
