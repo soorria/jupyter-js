@@ -4,7 +4,7 @@ import NextAuth, { InitOptions } from 'next-auth'
 
 import Providers from 'next-auth/providers'
 
-console.log({ url: process.env.NEXTAUTH_URL })
+const url = process.env.NEXTAUTH_URL
 
 const options: InitOptions = {
   providers: [
@@ -47,6 +47,7 @@ const options: InitOptions = {
 }
 
 const handler: NextApiHandler = async (req, res) => {
+  res.setHeader('x-url', url)
   await NextAuth(req, res, options)
 }
 

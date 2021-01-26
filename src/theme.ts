@@ -62,6 +62,7 @@ const theme = extendTheme({
     }),
   },
   config: {
+    useSystemColorMode: true,
     initialColorMode: 'dark',
   },
 })
