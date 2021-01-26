@@ -4,6 +4,8 @@ import NextAuth, { InitOptions } from 'next-auth'
 
 import Providers from 'next-auth/providers'
 
+console.log({ url: process.env.NEXTAUTH_URL })
+
 const options: InitOptions = {
   providers: [
     Providers.GitHub({
