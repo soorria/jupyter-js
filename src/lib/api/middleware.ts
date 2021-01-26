@@ -17,6 +17,11 @@ export const checkAuth: Middleware = async (req, _res, next) => {
 
   req.user = session?.user ?? null
 
+  // while testing
+  if (req.user?.username !== 'mo0th') {
+    req.user = null
+  }
+
   next()
 }
 
