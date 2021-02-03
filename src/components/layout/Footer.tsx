@@ -21,9 +21,11 @@ const COLORS = [
   'cyan.500',
   'purple.500',
   'blue.500',
-  'black',
+  'blackAlpha.500',
+  'whiteAlpha.500',
   'gray.500',
   'orange.500',
+  'yellow.500',
   'teal.500',
 ]
 
@@ -34,13 +36,13 @@ const heartPulse = keyframes`
     transform: scale(1);
   }
   5% {
-    transform: scale(1.1);
+    transform: scale(1.2);
   }
   10% {
     transform: scale(1);
   }
   15% {
-    transform: scale(1.2);
+    transform: scale(1.3);
   }
   50% {
     transform: scale(1);

@@ -14,7 +14,7 @@ export default class CustomDocument extends NextDocument {
           />
         </Head>
         <body>
-          <ColorModeScript />
+          <ColorModeScript initialColorMode="dark" />
           <Main />
           <NextScript />
         </body>

@@ -1,7 +1,9 @@
-import { Box, Flex } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { UnControlled as CodeMirror } from 'react-codemirror2'
+import type { Editor } from 'codemirror'
 import { __is_client__ } from '#src/constants'
+import { useEffect, useState } from 'react'
 
 if (__is_client__) {
   require('codemirror/lib/codemirror.css')
@@ -9,12 +11,16 @@ if (__is_client__) {
   require('codemirror/mode/xml/xml')
   require('codemirror/mode/javascript/javascript')
   require('codemirror/mode/jsx/jsx')
-  require('codemirror/keymap/vim')
+  require('codemirror/mode/markdown/markdown')
+  require('codemirror/addon/scroll/simplescrollbars')
+  require('codemirror/addon/scroll/simplescrollbars.css')
 }
 
 interface CodeEditorProps {
   initialValue?: string
   onChange: (value: string) => void
+  onEditorDidMount?: (editor: Editor) => void
+  mode: 'jsx' | 'markdown'
 }
 
 const CodeMirrorWrapper = styled(CodeMirror)`
@@ -22,32 +28,56 @@ const CodeMirrorWrapper = styled(CodeMirror)`
 
   .CodeMirror {
     height: 100%;
+    font-size: 1.25rem;
+  }
+
+  .CodeMirror-overlayscroll-horizontal div {
+    bottom: 2px;
+  }
+
+  .CodeMirror-overlayscroll-vertical div {
+    right: 2px;
+  }
+
+  .CodeMirror-overlayscroll-horizontal div,
+  .CodeMirror-overlayscroll-vertical div {
+    background: ${(props: any) => {
+      return props.theme.colors.purple[400]
+    }};
+    opacity: 0.8;
   }
 `
 
 const CodeEditor: React.FC<CodeEditorProps> = ({
   initialValue = 'console.log("hello world")',
   onChange,
+  onEditorDidMount,
+  mode,
 }) => {
+  const [initVal, setInitVal] = useState<string | undefined>()
+
+  useEffect(() => {
+    if (typeof initVal === 'undefined') {
+      setInitVal(initialValue)
+    }
+  }, [initVal, initialValue])
+
   return (
-    <Flex direction="column" h="100%" position="relative">
-      <Box></Box>
-      <Box flex="1">
-        <CodeMirrorWrapper
-          value={initialValue}
-          onChange={(_editor: any, _data: any, value: string) => onChange(value)}
-          options={{
-            theme: 'dracula',
-            lineNumbers: true,
-            mode: 'jsx',
-            keyMap: 'vim',
-            tabSize: 2,
-            lineWrapping: true,
-            scrollbarStyle: 'null',
-          }}
-        />
-      </Box>
-    </Flex>
+    <Box h="100%" zIndex={1}>
+      <CodeMirrorWrapper
+        value={initVal}
+        onChange={(_editor, _data, value: string) => onChange(value)}
+        editorDidMount={onEditorDidMount}
+        options={{
+          theme: 'dracula',
+          lineNumbers: mode === 'jsx',
+          mode,
+          tabSize: 2,
+          lineWrapping: true,
+          scrollbarStyle: 'overlay',
+        }}
+      />
+    </Box>
   )
 }
 

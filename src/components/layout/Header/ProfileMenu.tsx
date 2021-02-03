@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react'
 import { Session, signout } from 'next-auth/client'
 import Link from 'next/link'
-import { FiChevronDown, FiLogOut } from 'react-icons/fi'
+import { FiActivity, FiChevronDown, FiLogOut, FiSettings, FiUser } from 'react-icons/fi'
 
 interface ProfileMenuProps {
   user: Session['user']
@@ -39,11 +39,20 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ user }) => {
 
       <MenuList>
         <MenuGroup title="Profile">
-          <Link href="/profile" passHref>
-            <MenuItem as="a">Your Profile</MenuItem>
+          <Link href="/app/dashboard/profile" passHref>
+            <MenuItem as="a" icon={<FiUser />}>
+              Your Profile
+            </MenuItem>
           </Link>
-          <Link href="/profile/settings" passHref>
-            <MenuItem as="a">Settings</MenuItem>
+          <Link href="/app/dashboard/usage" passHref>
+            <MenuItem as="a" icon={<FiActivity />}>
+              Usage
+            </MenuItem>
+          </Link>
+          <Link href="/app/dashboard/settings" passHref>
+            <MenuItem as="a" icon={<FiSettings />}>
+              Settings
+            </MenuItem>
           </Link>
         </MenuGroup>
         <MenuDivider />

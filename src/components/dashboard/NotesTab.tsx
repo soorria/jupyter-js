@@ -1,9 +1,34 @@
 import fetcher from '#src/lib/fetcher'
 import INote from '#src/types/Note'
-import { Box, Center, Flex, Stack, Text, useColorModeValue } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Center,
+  Divider,
+  HStack,
+  Icon,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
+  Menu,
+  MenuButton,
+  MenuItemOption,
+  MenuList,
+  MenuOptionGroup,
+  Stack,
+  Text,
+  useColorModeValue,
+} from '@chakra-ui/react'
 import Link from 'next/link'
+import { FiClock, FiEdit, FiPlus, FiSearch } from 'react-icons/fi'
+import { FaSort } from 'react-icons/fa'
 import useSWR from 'swr'
 import Loader from '../shared/Loader'
+import NoteManageMenu from '../shared/NoteManageMenu'
+import StyledInput from '../shared/StyledInput'
+import { useMemo, useState } from 'react'
+import { format } from 'date-fns'
+import SortDirectionIcon from '../shared/SortDirectionIcon'
 
 interface NotesTabProps {}
 
@@ -12,40 +37,166 @@ const bg = [
   { main: 'whiteAlpha.50', hover: 'whiteAlpha.100' },
 ]
 
+const cmpFns: Record<string, (a: INote, b: INote) => number> = {
+  Name: (a, b) =>
+    a.title.localeCompare(b.title, ['en'], { ignorePunctuation: true, sensitivity: 'base' }),
+  Size: (a, b) => a.order.length - b.order.length,
+  'Created At': (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+  'Updated At': (a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime(),
+}
+
 const NotesTab: React.FC<NotesTabProps> = () => {
-  const { data: notes, error } = useSWR<INote[]>('/api/notes', url =>
+  const noteItemBg = useColorModeValue(bg[0], bg[1])
+
+  const { data, error, mutate } = useSWR<INote[]>('/api/notes', url =>
     fetcher(url).then(res => res.notes)
   )
+  const loading = !data && !error
 
-  const loading = !notes && !error
+  const [search, setSearch] = useState('')
+  const [sortKey, setSortKey] = useState('')
+  const [sortAsc, setSortAsc] = useState(true)
 
-  const noteItemBg = useColorModeValue(bg[0], bg[1])
+  const notes = useMemo(() => {
+    if (!data) return data
+    if (!search && !sortKey) return data
+
+    let result = data
+
+    if (search) {
+      result = result.filter(note => note.title.toLowerCase().includes(search.toLowerCase()))
+    }
+
+    if (sortKey) {
+      const mult = sortAsc ? 1 : -1
+      result = result.sort((a, b) => mult * cmpFns[sortKey](a, b))
+    }
+
+    return result
+  }, [search, sortKey, sortAsc, data])
+
+  const hoverShadow = useColorModeValue('lg', 'dark-lg')
+
+  const handleDeleteNote = (noteId: string) => () => {
+    mutate(data => data?.filter(note => note._id !== noteId))
+  }
 
   return (
     <Stack spacing={4}>
+      {data ? (
+        <>
+          <HStack spacing={4}>
+            <InputGroup>
+              <InputLeftElement pointerEvents="none">
+                <FiSearch />
+              </InputLeftElement>
+              <StyledInput
+                pl={10}
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Search Note Name"
+                variant="filled"
+              />
+              <InputRightElement width="4.5rem">
+                <Button h="1.75rem" size="sm" onClick={() => setSearch('')}>
+                  Clear
+                </Button>
+              </InputRightElement>
+            </InputGroup>
+
+            <Box>
+              <Menu closeOnSelect={false} placement="bottom-end">
+                <MenuButton
+                  as={Button}
+                  variant="subtle"
+                  rightIcon={<FaSort />}
+                  w="12rem"
+                  leftIcon={!sortKey ? null : <SortDirectionIcon isAscending={sortAsc} />}
+                >
+                  {sortKey ? sortKey : 'Sort Notes'}
+                </MenuButton>
+
+                <MenuList>
+                  <MenuOptionGroup
+                    value={sortKey}
+                    onChange={value => setSortKey(value as string)}
+                    title="Sort By"
+                    type="radio"
+                  >
+                    <MenuItemOption value="">None</MenuItemOption>
+                    <MenuItemOption value="Name">Name</MenuItemOption>
+                    <MenuItemOption value="Size">Size</MenuItemOption>
+                    <MenuItemOption value="Created At">Created At</MenuItemOption>
+                    <MenuItemOption value="Updated At">Updated At</MenuItemOption>
+                  </MenuOptionGroup>
+                  <MenuOptionGroup
+                    value={sortAsc ? 'asc' : 'desc'}
+                    onChange={value => setSortAsc(value === 'asc')}
+                    title="Sort Direction"
+                    type="radio"
+                  >
+                    <MenuItemOption isDisabled={sortKey === ''} value="asc">
+                      Ascending
+                    </MenuItemOption>
+                    <MenuItemOption isDisabled={sortKey === ''} value="desc">
+                      Descending
+                    </MenuItemOption>
+                  </MenuOptionGroup>
+                </MenuList>
+              </Menu>
+            </Box>
+          </HStack>
+          <Divider />
+        </>
+      ) : null}
+
       {notes?.map(note => (
         <Link href={`/app/note/${note._id}`} key={note._id} passHref>
-          <Flex
+          <HStack
             as="a"
             cursor="pointer"
-            align="center"
             px={8}
             py={6}
             rounded="md"
             bg={noteItemBg.main}
-            _hover={{ bg: noteItemBg.hover, boxShadow: 'lg' }}
+            _hover={{ bg: noteItemBg.hover, boxShadow: hoverShadow }}
             transition="all 200ms"
+            spacing={6}
           >
-            <Text flex="1 1" fontSize="lg">
-              {note.title}
-            </Text>
-            <Box>{note.order.length} cells</Box>
-          </Flex>
+            <Box flex="1 1">
+              <Text fontize="xl" fontWeight="bold" mb={4}>
+                {note.title}
+              </Text>
+              <HStack fontSize="sm">
+                <Icon as={FiClock} />
+                <Text>{format(new Date(note.createdAt), 'hh:mm dd/MM/yyyy')}</Text>
+                <Divider orientation="vertical" />
+                <Icon as={FiEdit} />
+                <Text>{format(new Date(note.updatedAt), 'hh:mm dd/MM/yyyy')}</Text>
+              </HStack>
+            </Box>
+            <Box textAlign="right">
+              <Text>{note.order.length} cells</Text>
+            </Box>
+            <NoteManageMenu noteId={note._id} onDelete={handleDeleteNote(note._id)} />
+          </HStack>
         </Link>
       ))}
-      {notes && notes.length ? (
+      {data ? (
         <Center h="20vh">
-          <Text>{notes.length} notebooks total</Text>
+          <Text>
+            {notes!.length} notebook{notes!.length === 1 ? '' : 's'}{' '}
+            {search ? `matching ${JSON.stringify(search)}` : 'total'}
+          </Text>
+        </Center>
+      ) : null}
+      {data?.length === 0 ? (
+        <Center h="30vh">
+          <Link href="/app/note/new" passHref>
+            <Button as="a" leftIcon={<FiPlus />} variant="solid">
+              Create your first notebook
+            </Button>
+          </Link>
         </Center>
       ) : null}
       {loading && (

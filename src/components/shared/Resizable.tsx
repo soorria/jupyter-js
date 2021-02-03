@@ -1,8 +1,9 @@
 import { useIsomorphicLayoutEffect } from '#src/hooks'
 // import debounce from '#src/utils/debounce'
-import { Box, BoxProps, Center, Flex, Icon } from '@chakra-ui/react'
+import { Box, BoxProps, Center, Flex, Icon, useColorModeValue } from '@chakra-ui/react'
 import { ReactNode, useEffect, useRef, useState } from 'react'
 import { GrDrag } from 'react-icons/gr'
+import { MdDragHandle } from 'react-icons/md'
 
 interface ResizableProps {
   minWidth?: BoxProps['minWidth']
@@ -29,6 +30,9 @@ const Resizable: React.FC<ResizableProps> = ({
   const [height, setHeight] = useState(0)
   const leftRef = useRef<HTMLDivElement>()
   const containerRef = useRef<HTMLDivElement>()
+  const dragBarColor = useColorModeValue('purple.100', 'purple.600')
+  const dragBarHoverColor = useColorModeValue('purple.200', 'purple.500')
+  const dragHandleColor = useColorModeValue('purple.900', 'purple.50')
 
   useIsomorphicLayoutEffect(() => {
     if (containerRef.current && !width) {
@@ -79,7 +83,10 @@ const Resizable: React.FC<ResizableProps> = ({
     if (!NSDragging) return
 
     const handleResize = (event: MouseEvent) => {
-      setHeight(event.pageY - containerRef.current!.offsetTop)
+      // https://stackoverflow.com/a/50310297
+      const rect = containerRef.current!.getBoundingClientRect()
+      const containerY = window.pageYOffset + rect.top
+      setHeight(event.pageY - containerY)
     }
 
     const handleDragEnd = () => {
@@ -116,7 +123,6 @@ const Resizable: React.FC<ResizableProps> = ({
         bottom={0}
         opacity={dragging ? 1 : 0}
         bg="transparent"
-        // bg="whiteAlpha.200"
         style={{ backdropFilter: 'blur(5px)' }}
         transition="opacity 150ms ease-in-out"
         zIndex={2}
@@ -140,11 +146,15 @@ const Resizable: React.FC<ResizableProps> = ({
           w={RESIZE_BAR_SIZE}
           cursor="col-resize"
           transform="translateX(50%)"
-          bg="purple.500"
+          bg={dragBarColor}
+          _hover={{ bg: dragBarHoverColor }}
+          color={dragHandleColor}
+          transition="all 200ms"
           onMouseDown={handleEWDragStart}
           zIndex={3}
+          flexDirection="column"
         >
-          <Icon boxSize={RESIZE_BAR_SIZE} as={GrDrag} />
+          <Icon transform="rotate(90deg)" as={MdDragHandle} boxSize={RESIZE_BAR_SIZE * 2} />
         </Center>
       </Box>
       <Box
@@ -164,11 +174,14 @@ const Resizable: React.FC<ResizableProps> = ({
         h={RESIZE_BAR_SIZE}
         cursor="row-resize"
         transform="translateY(50%)"
-        bg="purple.500"
+        bg={dragBarColor}
+        _hover={{ bg: dragBarHoverColor }}
+        color={dragHandleColor}
+        transition="all 200ms"
         onMouseDown={handleNSDragStart}
         zIndex={3}
       >
-        <Icon transform="rotate(90deg)" as={GrDrag} boxSize={RESIZE_BAR_SIZE} />
+        <Icon as={MdDragHandle} boxSize={RESIZE_BAR_SIZE * 2} />
       </Center>
     </Flex>
   )

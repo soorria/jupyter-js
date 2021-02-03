@@ -3,7 +3,7 @@ import HTTPError from '#src/lib/api/errors'
 import { ensureAuth, ensureDbConnection } from '#src/lib/api/middleware'
 import { Note } from '#src/lib/db/models'
 import INote from '#src/types/Note'
-import mongoose, { Document } from 'mongoose'
+import { Document, isValidObjectId } from 'mongoose'
 
 export default nc()
   .use(ensureAuth, ensureDbConnection)
@@ -16,7 +16,7 @@ export default nc()
   .get(async (req, res) => {
     const id = req.query.id as string
 
-    if (!mongoose.isValidObjectId(id)) {
+    if (!isValidObjectId(id)) {
       throw new HTTPError(404)
     }
 
@@ -29,6 +29,10 @@ export default nc()
     const updates: Partial<INote> = req.body
 
     const note: Document & INote = await Note.findOne({ _id: req.query.id, owner: req.user!.id })
+
+    if (!note) {
+      throw new HTTPError(404)
+    }
 
     let updated = false
 
@@ -71,6 +75,21 @@ export default nc()
     }
 
     console.log({ updated })
+
+    res.status(204).end()
+  })
+  .delete(async (req, res) => {
+    const { id } = req.query
+
+    if (!isValidObjectId(id)) {
+      throw new HTTPError(406, 'Invalid note id')
+    }
+
+    const result = await Note.findOneAndDelete({ _id: id, owner: req.user!.id })
+
+    if (!result) {
+      throw new HTTPError(404)
+    }
 
     res.status(204).end()
   })
