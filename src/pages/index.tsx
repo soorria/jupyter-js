@@ -1,5 +1,4 @@
 import MainLayout from '#src/components/layout/MainLayout'
-import { __dev__, __is_client__ } from '#src/constants'
 import { Box } from '@chakra-ui/react'
 import { useSession } from 'next-auth/client'
 

@@ -42,21 +42,10 @@ const Header: React.FC<HeaderProps> = memo(() => {
     }
   }, [])
 
-  const [short, setShort] = useState(false)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setShort(s => !s)
-    }, 3000)
-
-    return () => {
-      clearInterval(interval)
-    }
-  }, [])
-
   return (
     <HStack p={6} spacing={SPACING} bg={bg}>
       <Link href="/" passHref>
-        <Logo short={short} />
+        <Logo />
       </Link>
       <Spacer />
       {routeLoading && <Loader size="sm" />}
@@ -99,5 +88,7 @@ const Header: React.FC<HeaderProps> = memo(() => {
     </HStack>
   )
 })
+
+Header.displayName = 'Header'
 
 export default Header

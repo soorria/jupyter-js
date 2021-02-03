@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 const connection = { isConnected: 0 }
 
-export const dbConnect = async () => {
+export const dbConnect = async (): Promise<void> => {
   if (connection.isConnected) return
 
   try {
@@ -13,6 +13,7 @@ export const dbConnect = async () => {
     })
     connection.isConnected = db.connections[0].readyState
   } catch (err) {
+    console.log('Failed to Connect to db')
     throw err
   }
 }

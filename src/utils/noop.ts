@@ -1,3 +1,3 @@
-const noop = () => ({} as any)
+const noop = (): any => ({} as any)
 
 export default noop

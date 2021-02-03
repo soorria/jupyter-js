@@ -1,5 +1,5 @@
 import useClickAway from '#src/hooks/use-click-away'
-import { Box, Flex, Grid, Icon, IconButton, SimpleGrid, Tooltip } from '@chakra-ui/react'
+import { Box, Icon, IconButton, SimpleGrid, Tooltip } from '@chakra-ui/react'
 import { useEffect, useRef, useState } from 'react'
 import { FiEdit2, FiFileText, FiSave } from 'react-icons/fi'
 import CellShell from './CellShell'
@@ -30,6 +30,7 @@ const MarkdownCell: React.FC<MarkdownCellProps> = ({
 
   useEffect(() => {
     onChange(input)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [input])
 
   useClickAway(wrapperRef, () => {

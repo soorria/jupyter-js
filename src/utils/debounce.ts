@@ -1,4 +1,4 @@
-const debounce = (fn: () => void | Promise<void>, delay: number) => {
+const debounce = (fn: () => void | Promise<void>, delay: number): (() => void | Promise<void>) => {
   let timer: ReturnType<typeof setTimeout>
 
   return () => {

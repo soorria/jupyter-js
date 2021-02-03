@@ -1,4 +1,3 @@
-import { __is_client__ } from '#src/constants'
 import { useDebounce, useMounted } from '#src/hooks'
 import { bundle } from '#src/lib/bundler'
 import { Button, Flex, Icon } from '@chakra-ui/react'
@@ -31,6 +30,7 @@ const CodeCell: React.FC<CodeCellProps> = ({ initialValue, onChange, onMove, onD
 
   const bundleInput = useDebounce(async () => {
     try {
+      // eslint-disable-next-line prefer-const
       let bundledCode: string
       setTimeout(() => {
         if (!bundledCode) {
@@ -61,6 +61,7 @@ const CodeCell: React.FC<CodeCellProps> = ({ initialValue, onChange, onMove, onD
       setInput(formatted)
       editor.current?.setValue(formatted)
     } catch (err) {
+      console.log('format err', err)
     } finally {
       setFormatting(false)
     }
@@ -71,6 +72,7 @@ const CodeCell: React.FC<CodeCellProps> = ({ initialValue, onChange, onMove, onD
       onChange && onChange(input)
       bundleInput()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [input])
 
   const handleChange = (nextValue: string) => {

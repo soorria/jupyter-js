@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useRef } from 'react'
 
-const useDebounce = (fn: () => void | Promise<void>, delay: number) => {
+const useDebounce = (
+  fn: () => void | Promise<void>,
+  delay: number
+): (() => void | Promise<void>) => {
   const fnRef = useRef(fn)
   const timerRef = useRef<number>()
 

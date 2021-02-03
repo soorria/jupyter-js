@@ -6,4 +6,6 @@ const StyledInput = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   return <Input ref={ref} focusBorderColor={focusColor} {...props} />
 })
 
+StyledInput.displayName = 'StyledInput'
+
 export default StyledInput

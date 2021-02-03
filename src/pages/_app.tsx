@@ -1,4 +1,3 @@
-import { __is_client__ } from '#src/constants'
 import theme from '#src/theme'
 import { ChakraProvider } from '@chakra-ui/react'
 import { Provider } from 'next-auth/client'
@@ -7,7 +6,7 @@ import Head from 'next/head'
 import { SWRConfig } from 'swr'
 import fetcher from '#lib/fetcher'
 
-const App = ({ Component, pageProps }: AppProps) => {
+const App = ({ Component, pageProps }: AppProps): React.ReactNode => {
   return (
     <>
       <Head>

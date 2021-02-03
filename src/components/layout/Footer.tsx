@@ -122,4 +122,6 @@ const Footer: React.FC<FooterProps> = memo(() => {
   )
 })
 
+Footer.displayName = 'Footer'
+
 export default Footer

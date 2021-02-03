@@ -1,4 +1,4 @@
-const allSettled = (promises: Promise<any>[]) =>
+const allSettled = (promises: Promise<any>[]): Promise<any[]> =>
   Promise.all(
     promises.map(promise =>
       promise.then(

@@ -5,6 +5,7 @@ const fetcher = async <T = any>(url: string, options?: AxiosRequestConfig): Prom
     const response = await axios.get<T>(url, options)
     return response.data
   } catch (err) {
+    console.log('fetch', { err })
     throw err
   }
 }

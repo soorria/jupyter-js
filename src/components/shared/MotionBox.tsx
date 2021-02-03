@@ -3,6 +3,7 @@ import { isValidMotionProp, motion } from 'framer-motion'
 import { forwardRef } from 'react'
 
 const MotionBox = motion.custom<BoxProps>(
+  // eslint-disable-next-line react/display-name
   forwardRef((props, ref) => {
     const chakraProps: Record<string, any> = {}
     Object.entries(props).forEach(([key, value]) => {

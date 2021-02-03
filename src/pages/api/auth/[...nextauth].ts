@@ -27,7 +27,7 @@ const options: InitOptions = {
 
       return { ...session, user: sessionUser }
     },
-    async jwt(token, user, _account, profile, _isNew) {
+    async jwt(token, user, _account, profile) {
       // console.log({ token, user, account, profile, isNew })
 
       let result = token

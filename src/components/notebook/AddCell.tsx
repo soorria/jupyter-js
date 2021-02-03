@@ -31,7 +31,7 @@ const AddCell: React.FC<AddCellProps> = ({ prevCellId, noteId, expanded = false 
     false && console.log({ type, prevCellId, noteId })
     setLoading(true)
     try {
-      const response = await axios.post(`/api/notes/${noteId}/cell`, { type, prevCellId })
+      await axios.post(`/api/notes/${noteId}/cell`, { type, prevCellId })
       await trigger(`/api/notes/${noteId}`, true)
     } catch (err) {
       // TODO Handle create cell errors

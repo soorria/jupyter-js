@@ -7,7 +7,6 @@ import {
   Spacer,
   useColorModeValue,
 } from '@chakra-ui/react'
-import { forwardRef } from 'react'
 import { FiChevronDown, FiChevronUp, FiTrash2 } from 'react-icons/fi'
 
 type CellShellProps = Omit<BoxProps, 'title'> & {
@@ -15,42 +14,42 @@ type CellShellProps = Omit<BoxProps, 'title'> & {
   toolbarButtons?: React.ReactNode
   onDelete?: () => any
   onMove?: (direction: 'UP' | 'DOWN') => any
-  children?: React.ReactNode
 }
 
-const CellShell = forwardRef<HTMLDivElement, CellShellProps>(
-  ({ children, title, onDelete, onMove, toolbarButtons, ...rest }, ref) => {
-    const bg = useColorModeValue('blackAlpha.50', 'whiteAlpha.50')
+const CellShell: React.FC<CellShellProps> = (
+  { children, title, onDelete, onMove, toolbarButtons, ...rest },
+  ref
+) => {
+  const bg = useColorModeValue('blackAlpha.50', 'whiteAlpha.50')
 
-    return (
-      <Box ref={ref} m={4} px={4} pb={6} pt={4} bg={bg} rounded="md" {...rest}>
-        <HStack spacing={4} pb={4}>
-          <Heading fontSize="lg" fontWeight="bold" fontFamily="heading" as="h3">
-            {title}
-          </Heading>
-          <Spacer />
-          {toolbarButtons}
-          <IconButton
-            onClick={onMove && (() => onMove('DOWN'))}
-            aria-label="move cell down"
-            icon={<FiChevronDown />}
-          />
-          <IconButton
-            onClick={onMove && (() => onMove('UP'))}
-            aria-label="move cell up"
-            icon={<FiChevronUp />}
-          />
-          <IconButton
-            onClick={onDelete}
-            aria-label="delete cell"
-            colorScheme="red"
-            icon={<FiTrash2 />}
-          />
-        </HStack>
-        {children}
-      </Box>
-    )
-  }
-)
+  return (
+    <Box ref={ref} m={4} px={4} pb={6} pt={4} bg={bg} rounded="md" {...rest}>
+      <HStack spacing={4} pb={4}>
+        <Heading fontSize="lg" fontWeight="bold" fontFamily="heading" as="h3">
+          {title}
+        </Heading>
+        <Spacer />
+        {toolbarButtons}
+        <IconButton
+          onClick={onMove && (() => onMove('DOWN'))}
+          aria-label="move cell down"
+          icon={<FiChevronDown />}
+        />
+        <IconButton
+          onClick={onMove && (() => onMove('UP'))}
+          aria-label="move cell up"
+          icon={<FiChevronUp />}
+        />
+        <IconButton
+          onClick={onDelete}
+          aria-label="delete cell"
+          colorScheme="red"
+          icon={<FiTrash2 />}
+        />
+      </HStack>
+      {children}
+    </Box>
+  )
+}
 
 export default CellShell

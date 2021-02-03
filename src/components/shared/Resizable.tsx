@@ -1,8 +1,6 @@
 import { useIsomorphicLayoutEffect } from '#src/hooks'
-// import debounce from '#src/utils/debounce'
 import { Box, BoxProps, Center, Flex, Icon, useColorModeValue } from '@chakra-ui/react'
 import { ReactNode, useEffect, useRef, useState } from 'react'
-import { GrDrag } from 'react-icons/gr'
 import { MdDragHandle } from 'react-icons/md'
 
 interface ResizableProps {
