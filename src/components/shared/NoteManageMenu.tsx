@@ -19,7 +19,7 @@ import {
 } from '@chakra-ui/react'
 import axios from 'axios'
 import { useRef, useState } from 'react'
-import { FiMenu, FiTrash2 } from 'react-icons/fi'
+import { FiMoreHorizontal, FiTrash2 } from 'react-icons/fi'
 
 interface NoteManageMenuProps {
   noteId: string
@@ -60,6 +60,7 @@ const NoteManageMenu: React.FC<NoteManageMenuProps> = ({ noteId, onDelete }) => 
     <>
       <Box>
         <Menu
+          isLazy
           placement="bottom-end"
           isOpen={showMenu}
           onOpen={() => {
@@ -69,7 +70,7 @@ const NoteManageMenu: React.FC<NoteManageMenuProps> = ({ noteId, onDelete }) => 
         >
           <MenuButton
             as={IconButton}
-            icon={<FiMenu />}
+            icon={<FiMoreHorizontal />}
             onClick={event => {
               event.preventDefault()
               setShowMenu(true)

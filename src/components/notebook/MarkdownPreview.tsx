@@ -2,6 +2,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import {
   Box,
+  Center,
   Checkbox,
   Code,
   Divider,
@@ -27,6 +28,7 @@ import gfm from 'remark-gfm'
 
 interface MarkdownPreviewProps {
   markdown: string
+  editing?: boolean
 }
 
 const Root = styled.div`
@@ -41,8 +43,8 @@ const Root = styled.div`
     margin-bottom: 0.75rem;
   }
 
-  > ul > li > *:first-child:not(.task-checkbox),
-  > ol > li > *:first-child:not(.task-checkbox) {
+  > ul > li > *:first-of-type:not(.task-checkbox),
+  > ol > li > *:first-of-type:not(.task-checkbox) {
     margin-top: 1.25rem;
   }
 
@@ -197,10 +199,14 @@ const renderers = {
 
 const plugins = [gfm]
 
-const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ markdown }) => {
+const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ markdown, editing }) => {
   return (
     <Box maxW="800px" mx="auto" p={4}>
-      <ReactMarkdown source={markdown} plugins={plugins} renderers={renderers} />
+      {markdown || editing ? (
+        <ReactMarkdown source={markdown} plugins={plugins} renderers={renderers} />
+      ) : (
+        <Center h="10vh">Click to edit this cell</Center>
+      )}
     </Box>
   )
 }

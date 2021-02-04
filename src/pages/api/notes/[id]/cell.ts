@@ -47,10 +47,10 @@ export default nc()
     if (prevCellIndex === -1) {
       note.order.unshift(newCellId)
     } else {
-      note.order.splice(prevCellIndex, 0, newCellId)
+      note.order.splice(prevCellIndex + 1, 0, newCellId)
     }
 
     await note.save()
 
-    res.status(201).send({ note })
+    res.status(201).send({ cell: newCell })
   })

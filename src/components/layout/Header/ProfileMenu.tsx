@@ -21,7 +21,7 @@ interface ProfileMenuProps {
 const ProfileMenu: React.FC<ProfileMenuProps> = ({ user }) => {
   return (
     <Menu placement="bottom-end">
-      <MenuButton as={Button} rightIcon={<FiChevronDown />} alignItems="center">
+      <MenuButton as={Button} rightIcon={<FiChevronDown />} alignItems="center" isFullWidth>
         <HStack display="inline-flex">
           <Avatar
             size="xs"

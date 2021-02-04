@@ -1,19 +1,11 @@
-import { CellType, VALID_CELL_TYPES } from '#src/types/Cell'
-import {
-  Box,
-  Button,
-  Flex,
-  Grid,
-  Icon,
-  IconButton,
-  Tooltip,
-  useColorModeValue,
-} from '@chakra-ui/react'
-import { trigger } from 'swr'
+import ICell, { CellType, VALID_CELL_TYPES } from '#src/types/Cell'
+import { Box, Button, Flex, Grid, Icon, IconButton, useColorModeValue } from '@chakra-ui/react'
+import { mutate, trigger } from 'swr'
 import axios from 'axios'
 import { useState } from 'react'
 import { FiCode, FiFileText } from 'react-icons/fi'
 import { FaDiceD6 } from 'react-icons/fa'
+import INote from '#src/types/Note'
 
 interface AddCellProps {
   noteId: string
@@ -31,7 +23,23 @@ const AddCell: React.FC<AddCellProps> = ({ prevCellId, noteId, expanded = false 
     false && console.log({ type, prevCellId, noteId })
     setLoading(true)
     try {
-      await axios.post(`/api/notes/${noteId}/cell`, { type, prevCellId })
+      const {
+        data: { cell: newCell },
+      }: { data: { cell: ICell } } = await axios.post(`/api/notes/${noteId}/cell`, {
+        type,
+        prevCellId,
+      })
+      mutate(`/api/notes/${noteId}`, (data: INote) => {
+        if (data.cells) {
+          data.cells[newCell._id] = newCell
+          if (prevCellId) {
+            data.order.splice(data.order.findIndex(id => id === prevCellId) + 1, 0, newCell._id)
+          } else {
+            data.order.unshift(newCell._id)
+          }
+        }
+        return { ...data }
+      })
       await trigger(`/api/notes/${noteId}`, true)
     } catch (err) {
       // TODO Handle create cell errors
@@ -84,20 +92,18 @@ const AddCell: React.FC<AddCellProps> = ({ prevCellId, noteId, expanded = false 
           <Button {...buttonCommonProps} onClick={handleClick('javascript')} leftIcon={<FiCode />}>
             New Code Cell
           </Button>
-          <Tooltip label="Add random cell" offset={[0, 12]}>
-            <IconButton
-              {...buttonCommonProps}
-              aria-label="create random cell"
-              rounded="full"
-              bg={bg}
-              icon={<FaDiceD6 />}
-              onClick={() => handleClick(randomType())()}
-              size="sm"
-              title="random cell"
-            >
-              <Icon as={FaDiceD6} />
-            </IconButton>
-          </Tooltip>
+          <IconButton
+            {...buttonCommonProps}
+            aria-label="create random cell"
+            rounded="full"
+            bg={bg}
+            icon={<FaDiceD6 />}
+            onClick={() => handleClick(randomType())()}
+            size="sm"
+            title="random cell"
+          >
+            <Icon as={FaDiceD6} />
+          </IconButton>
           <Button
             {...buttonCommonProps}
             onClick={handleClick('markdown')}

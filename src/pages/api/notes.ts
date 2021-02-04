@@ -9,7 +9,7 @@ const handler = nc()
   .get(async (req, res) => {
     const uid = req.user!.id
 
-    const notes = await Note.find({ owner: uid }).select('-cells')
+    const notes = await Note.find({ owner: uid }, { cells: 0 })
 
     res.json({ notes })
   })

@@ -31,6 +31,11 @@ const CodeMirrorWrapper = styled(CodeMirror)`
     font-size: 1.25rem;
   }
 
+  .CodeMirror-wrap pre.CodeMirror-line,
+  .CodeMirror-wrap pre.CodeMirror-line-like {
+    word-break: break-all;
+  }
+
   .CodeMirror-overlayscroll-horizontal div {
     bottom: 2px;
   }
@@ -71,6 +76,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
         options={{
           theme: 'dracula',
           lineNumbers: mode === 'jsx',
+          // lineNumbers: true,
           mode,
           tabSize: 2,
           lineWrapping: true,

@@ -50,6 +50,13 @@ const theme = extendTheme({
         transition: `${defaultTheme.components.Textarea.baseStyle.transition}, height 0s`,
       },
     },
+    Popover: {
+      baseStyle: {
+        popper: {
+          width: 'auto',
+        },
+      },
+    },
   },
   fonts: {
     heading: `'Poppins', ${defaultTheme.fonts.heading}`,
@@ -64,6 +71,7 @@ const theme = extendTheme({
         'html, body, #__next': {
           height: '100%',
           bg: mode('gray.50', 'gray.800')(props),
+          overflowX: 'hidden',
         },
         // Chrome
         '*::-webkit-scrollbar': {
@@ -94,11 +102,11 @@ const theme = extendTheme({
         },
         // Firefox
         '*': {
-          'scrollbar-width': 'thin',
-          'scrollbar-color': `${scrollThumb} ${scrollTrack}`,
+          scrollbarWidth: 'thin',
+          scrollbarColor: `${scrollThumb} ${scrollTrack}`,
         },
         '.no-track': {
-          'scrollbar-color': `${scrollThumb} transparent`,
+          scrollbarColor: `${scrollThumb} transparent`,
         },
       }
     },

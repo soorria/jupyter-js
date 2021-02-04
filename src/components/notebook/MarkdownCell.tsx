@@ -80,7 +80,14 @@ const MarkdownCell: React.FC<MarkdownCellProps> = ({
       onDelete={onDelete}
       onMove={onMove}
     >
-      <SimpleGrid w="100%" onClick={handleStartEditing} ref={wrapperRef} columns={2} gap={4}>
+      <SimpleGrid
+        w="100%"
+        onClick={handleStartEditing}
+        ref={wrapperRef}
+        columns={2}
+        gap={4}
+        minH="10vh"
+      >
         {hasBeenOpened ? (
           <Box display={editing ? 'block' : 'none'} maxH={maxH} h="100%">
             <CodeEditor mode="markdown" initialValue={initialValue} onChange={handleChange} />
@@ -88,7 +95,7 @@ const MarkdownCell: React.FC<MarkdownCellProps> = ({
         ) : null}
         <Box gridColumnStart={editing ? 2 : 1} gridColumnEnd={-1} h="100%">
           <Box overflowY="auto" className="no-track" maxH={maxH}>
-            <MarkdownPreview markdown={input} />
+            <MarkdownPreview editing={editing} markdown={input} />
           </Box>
         </Box>
       </SimpleGrid>
