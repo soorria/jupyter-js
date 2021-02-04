@@ -33,7 +33,7 @@ import SortDirectionIcon from '../shared/SortDirectionIcon'
 interface NotesTabProps {}
 
 const bg = [
-  { main: 'blackAlpha.50', hover: 'blackAlpha.100' },
+  { main: 'gray.100', hover: 'gray.200' },
   { main: 'whiteAlpha.50', hover: 'whiteAlpha.100' },
 ]
 
