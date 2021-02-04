@@ -138,9 +138,9 @@ const NotePage: React.FC<NotePageProps> = () => {
     <MainLayout>
       {mounted && !loading ? (
         note ? (
-          <Box mb="30vh" mt={4} position="relative">
+          <Box mb="30vh" mt={4} mx={{ base: 4, md: 8 }} position="relative">
             {/* Editable Cell Title */}
-            <HStack py={4} px={8} align="center" spacing={4}>
+            <HStack py={4} align="center" spacing={4}>
               <Editable
                 onSubmit={handleTitleSubmit}
                 isPreviewFocusable={false}

@@ -16,14 +16,18 @@ type CellShellProps = Omit<BoxProps, 'title'> & {
   onMove?: (direction: 'UP' | 'DOWN') => any
 }
 
-const CellShell: React.FC<CellShellProps> = (
-  { children, title, onDelete, onMove, toolbarButtons, ...rest },
-  ref
-) => {
+const CellShell: React.FC<CellShellProps> = ({
+  children,
+  title,
+  onDelete,
+  onMove,
+  toolbarButtons,
+  ...rest
+}) => {
   const bg = useColorModeValue('blackAlpha.50', 'whiteAlpha.50')
 
   return (
-    <Box ref={ref} m={4} px={4} pb={6} pt={4} bg={bg} rounded="md" {...rest}>
+    <Box px={4} pb={6} pt={4} bg={bg} rounded="md" {...rest}>
       <HStack spacing={4} pb={4}>
         <Heading fontSize="lg" fontWeight="bold" fontFamily="heading" as="h3">
           {title}

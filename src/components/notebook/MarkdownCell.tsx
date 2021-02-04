@@ -1,7 +1,7 @@
 import useClickAway from '#src/hooks/use-click-away'
 import { Box, Icon, IconButton, SimpleGrid, Tooltip } from '@chakra-ui/react'
 import { useEffect, useRef, useState } from 'react'
-import { FiEdit2, FiFileText, FiSave } from 'react-icons/fi'
+import { FiEdit2, FiFileText, FiMaximize2, FiMinimize2, FiSave } from 'react-icons/fi'
 import CellShell from './CellShell'
 import CodeEditor from './CodeEditor'
 import MarkdownPreview from './MarkdownPreview'
@@ -23,10 +23,7 @@ const MarkdownCell: React.FC<MarkdownCellProps> = ({
   const wrapperRef = useRef<HTMLDivElement>(null)
   const [editing, setEditing] = useState(false)
   const [hasBeenOpened, setHasBeenOpened] = useState(false)
-
-  useEffect(() => {
-    console.log({ editing, hasBeenOpened })
-  }, [editing, hasBeenOpened])
+  const [maximised, setMaximised] = useState(false)
 
   useEffect(() => {
     onChange(input)
@@ -45,6 +42,8 @@ const MarkdownCell: React.FC<MarkdownCellProps> = ({
     setEditing(true)
     setHasBeenOpened(true)
   }
+
+  const maxH = maximised ? 'none' : '50vh'
 
   return (
     <CellShell
@@ -68,19 +67,29 @@ const MarkdownCell: React.FC<MarkdownCellProps> = ({
               aria-label="Edit this cell"
             />
           </Tooltip>
+          <Tooltip label={(maximised ? 'Minimise' : 'Maximise') + ' this cell'}>
+            <IconButton
+              icon={maximised ? <FiMinimize2 /> : <FiMaximize2 />}
+              isDisabled={editing}
+              onClick={() => setMaximised(prev => !prev)}
+              aria-label="Edit this cell"
+            />
+          </Tooltip>
         </>
       }
       onDelete={onDelete}
       onMove={onMove}
     >
-      <SimpleGrid w="100%" onClick={handleStartEditing} ref={wrapperRef} columns={2} gap={2}>
+      <SimpleGrid w="100%" onClick={handleStartEditing} ref={wrapperRef} columns={2} gap={4}>
         {hasBeenOpened ? (
-          <Box display={editing ? 'block' : 'none'}>
+          <Box display={editing ? 'block' : 'none'} maxH={maxH} h="100%">
             <CodeEditor mode="markdown" initialValue={initialValue} onChange={handleChange} />
           </Box>
         ) : null}
-        <Box gridColumnStart={editing ? 2 : 1} gridColumnEnd={-1}>
-          <MarkdownPreview markdown={input} />
+        <Box gridColumnStart={editing ? 2 : 1} gridColumnEnd={-1} h="100%">
+          <Box overflowY="auto" className="no-track" maxH={maxH}>
+            <MarkdownPreview markdown={input} />
+          </Box>
         </Box>
       </SimpleGrid>
     </CellShell>

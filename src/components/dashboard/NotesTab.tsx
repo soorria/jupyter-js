@@ -82,7 +82,7 @@ const NotesTab: React.FC<NotesTabProps> = () => {
   }
 
   return (
-    <Stack spacing={4}>
+    <Stack spacing={6}>
       {data ? (
         <>
           <HStack spacing={4}>
@@ -182,6 +182,7 @@ const NotesTab: React.FC<NotesTabProps> = () => {
           </HStack>
         </Link>
       ))}
+
       {data ? (
         <Center h="20vh">
           <Text>
@@ -190,6 +191,7 @@ const NotesTab: React.FC<NotesTabProps> = () => {
           </Text>
         </Center>
       ) : null}
+
       {data?.length === 0 ? (
         <Center h="30vh">
           <Link href="/app/note/new" passHref>
@@ -199,6 +201,7 @@ const NotesTab: React.FC<NotesTabProps> = () => {
           </Link>
         </Center>
       ) : null}
+
       {loading && (
         <Center h="20vh">
           <Loader size="lg" />

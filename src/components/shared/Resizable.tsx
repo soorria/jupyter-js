@@ -1,6 +1,6 @@
 import { useIsomorphicLayoutEffect } from '#src/hooks'
 import { Box, BoxProps, Center, Flex, Icon, useColorModeValue } from '@chakra-ui/react'
-import { ReactNode, useEffect, useRef, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import { MdDragHandle } from 'react-icons/md'
 
 interface ResizableProps {
@@ -15,6 +15,53 @@ interface ResizableProps {
 
 const RESIZE_BAR_SIZE = 4
 
+type ResizeHandler = (event: MouseEvent | TouchEvent) => any
+type DragEndHandler = (event: MouseEvent | TouchEvent) => any
+
+const events = {
+  touch: {
+    start: 'touchstart',
+    move: 'touchmove',
+    end: 'touchend',
+  },
+  mouse: {
+    start: 'mousedown',
+    move: 'mousemove',
+    end: 'mouseup',
+  },
+} as const
+
+const addResizableEvents = ({
+  handleResize,
+  handleDragEnd,
+}: {
+  handleResize: ResizeHandler
+  handleDragEnd: DragEndHandler
+}): (() => void) => {
+  window.addEventListener(events.mouse.move, handleResize)
+  window.addEventListener(events.touch.move, handleResize)
+  window.addEventListener(events.mouse.end, handleDragEnd)
+  window.addEventListener(events.touch.end, handleDragEnd)
+
+  return () => {
+    window.removeEventListener(events.mouse.move, handleResize)
+    window.removeEventListener(events.touch.move, handleResize)
+    window.removeEventListener(events.mouse.end, handleDragEnd)
+    window.removeEventListener(events.touch.end, handleDragEnd)
+  }
+}
+
+const getTouchId = (e: any): number | null =>
+  e?.targetTouches?.[0]?.identifier ?? e?.changedTouches?.[0]?.identifier
+
+const findTouch = (touches?: TouchList, id?: number | null): Touch | null => {
+  if (id === null || !touches?.length) return null
+  for (let i = 0; i < touches.length; i++) {
+    if (touches[i].identifier === id) return touches[i]
+  }
+  return null
+}
+
 const Resizable: React.FC<ResizableProps> = ({
   minWidth,
   maxWidth,
@@ -28,6 +75,9 @@ const Resizable: React.FC<ResizableProps> = ({
   const [height, setHeight] = useState(0)
   const leftRef = useRef<HTMLDivElement>()
   const containerRef = useRef<HTMLDivElement>()
+  const EWRef = useRef<HTMLDivElement>(null)
+  const NSRef = useRef<HTMLDivElement>(null)
+  const touchIdRef = useRef<number | null>(null)
   const dragBarColor = useColorModeValue('purple.100', 'purple.600')
   const dragBarHoverColor = useColorModeValue('purple.200', 'purple.500')
   const dragHandleColor = useColorModeValue('purple.900', 'purple.50')
@@ -55,53 +105,91 @@ const Resizable: React.FC<ResizableProps> = ({
   useEffect(() => {
     if (!EWDragging) return
 
-    const handleResize = (event: MouseEvent) => {
-      setWidth(event.pageX - leftRef.current!.getBoundingClientRect().x)
+    const handleResize: ResizeHandler = event => {
+      if (event.type === events.mouse.move) {
+        setWidth((event as MouseEvent).pageX - leftRef.current!.getBoundingClientRect().x)
+      } else {
+        // Prevent scrolling when you try to drag
+        event.preventDefault()
+
+        event = event as TouchEvent
+        const id = touchIdRef.current
+        const touch = findTouch(event.targetTouches ?? event.changedTouches, id)
+
+        if (!touch) return
+
+        setWidth(touch.pageX - leftRef.current!.getBoundingClientRect().x)
+      }
+      console.log(2)
     }
 
     const handleDragEnd = () => {
       setEWDragging(false)
     }
 
-    window.addEventListener('mousemove', handleResize)
-    window.addEventListener('mouseup', handleDragEnd)
-
-    return () => {
-      window.removeEventListener('mousemove', handleResize)
-      window.removeEventListener('mouseup', handleDragEnd)
-    }
+    return addResizableEvents({ handleResize, handleDragEnd })
   }, [EWDragging])
-  const handleEWDragStart = () => {
+  const handleEWDragStart = useCallback((e: any) => {
+    if (e.type === events.touch.start) {
+      e.preventDefault()
+      touchIdRef.current = getTouchId(e)
+    }
     setEWDragging(true)
-  }
+    console.log(1)
+  }, [])
 
   // East-West Dragging
   const [NSDragging, setNSDragging] = useState(false)
   useEffect(() => {
     if (!NSDragging) return
 
-    const handleResize = (event: MouseEvent) => {
+    const handleResize: ResizeHandler = event => {
       // https://stackoverflow.com/a/50310297
       const rect = containerRef.current!.getBoundingClientRect()
       const containerY = window.pageYOffset + rect.top
-      setHeight(event.pageY - containerY)
+
+      if (event.type === events.mouse.move) {
+        setHeight((event as MouseEvent).pageY - containerY)
+      } else {
+        // Prevent scrolling when you try to drag
+        event.preventDefault()
+
+        event = event as TouchEvent
+        const id = touchIdRef.current
+        const touch = findTouch(event.targetTouches ?? event.changedTouches, id)
+
+        if (!touch) return
+
+        setHeight(touch.pageY - containerY)
+      }
     }
 
-    const handleDragEnd = () => {
+    const handleDragEnd: DragEndHandler = () => {
       setNSDragging(false)
     }
 
-    window.addEventListener('mousemove', handleResize)
-    window.addEventListener('mouseup', handleDragEnd)
+    return addResizableEvents({ handleResize, handleDragEnd })
+  }, [NSDragging])
+  const handleNSDragStart = useCallback((e: any) => {
+    if (e.type === events.touch.start) {
+      e.preventDefault()
+      touchIdRef.current = getTouchId(e)
+    }
+    setNSDragging(true)
+  }, [])
+
+  useEffect(() => {
+    // The refs might be undefined by the time the component is unmounted
+    const nodes = { ew: EWRef.current, ns: NSRef.current }
+
+    nodes.ew?.addEventListener(events.touch.start, handleEWDragStart, { passive: false })
+    nodes.ns?.addEventListener(events.touch.start, handleNSDragStart, { passive: false })
 
     return () => {
-      window.removeEventListener('mousemove', handleResize)
-      window.removeEventListener('mouseup', handleDragEnd)
+      nodes.ew?.removeEventListener(events.touch.start, handleEWDragStart)
+      nodes.ns?.removeEventListener(events.touch.start, handleNSDragStart)
     }
-  }, [NSDragging])
-  const handleNSDragStart = () => {
-    setNSDragging(true)
-  }
+  }, [handleEWDragStart, handleNSDragStart])
 
   const dragging = EWDragging || NSDragging
 
@@ -137,6 +225,7 @@ const Resizable: React.FC<ResizableProps> = ({
       >
         {left}
         <Center
+          ref={EWRef}
           position="absolute"
           right={0}
           top={0}
@@ -165,6 +254,7 @@ const Resizable: React.FC<ResizableProps> = ({
         {right}
       </Box>
       <Center
+        ref={NSRef}
         position="absolute"
         right={0}
         left={0}

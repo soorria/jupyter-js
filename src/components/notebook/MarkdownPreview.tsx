@@ -41,14 +41,14 @@ const Root = styled.div`
     margin-bottom: 0.75rem;
   }
 
-  > ul > li > *:first-child,
-  > ol > li > *:first-child {
+  > ul > li > *:first-child:not(.task-checkbox),
+  > ol > li > *:first-child:not(.task-checkbox) {
     margin-top: 1.25rem;
   }
 
   > ul > li > *:last-child,
   > ol > li > *:last-child {
-    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
   }
 `
 
@@ -167,7 +167,7 @@ const renderers = {
         listStyleType="none"
       >
         {isTask && (
-          <Box position="absolute" left={0} top="0.375rem">
+          <Box className="task-checkbox" position="absolute" left={0} top="0.375rem">
             <Checkbox isChecked={props.checked} isReadOnly />
           </Box>
         )}

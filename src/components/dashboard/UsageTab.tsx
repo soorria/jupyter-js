@@ -1,5 +1,4 @@
 import { Box } from '@chakra-ui/react'
-
 interface UsageTabProps {}
 
 const UsageTab: React.FC<UsageTabProps> = () => {

@@ -3,6 +3,7 @@ import ProfileTab from '#src/components/dashboard/ProfileTab'
 import SettingsTab from '#src/components/dashboard/SettingsTab'
 import UsageTab from '#src/components/dashboard/UsageTab'
 import MainLayout from '#src/components/layout/MainLayout'
+import MotionBox from '#src/components/shared/MotionBox'
 import {
   Box,
   Tab,
@@ -13,6 +14,7 @@ import {
   useColorModeValue,
   useToken,
 } from '@chakra-ui/react'
+import { AnimateSharedLayout } from 'framer-motion'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -27,11 +29,40 @@ const URL_TO_TAB_INDEX: Record<string, number> = {
   settings: 3,
 }
 
+const useSelectedTabColor = () => useColorModeValue('purple.600', 'purple.300')
+
+const TabIndicator: React.FC<{ tabFor: string; selectedTab: string }> = ({
+  tabFor,
+  selectedTab,
+}) => {
+  const bg = useSelectedTabColor()
+  return tabFor === selectedTab ? (
+    <MotionBox
+      layout
+      layoutId="tab-indicator"
+      transition={{ duration: 0.2 }}
+      position="absolute"
+      bottom={0}
+      left={0}
+      right={0}
+      bg={bg}
+      h="2px"
+    />
+  ) : null
+}
+
 const Notes: React.FC<NotesProps> = ({ initialIndex }) => {
   const router = useRouter()
   const { submenu = [] } = router.query
   const [selected = ''] = submenu
   const [index, setIndex] = useState(initialIndex || 0)
+  const selectedColor = useSelectedTabColor()
+
+  const tabProps = {
+    position: 'relative',
+    _selected: { borderColor: 'inherit', color: selectedColor },
+    border: 'none',
+  } as const
 
   useEffect(() => {
     setIndex(URL_TO_TAB_INDEX[selected] || 0)
@@ -45,7 +76,7 @@ const Notes: React.FC<NotesProps> = ({ initialIndex }) => {
 
   return (
     <MainLayout>
-      <Box maxW="60rem" mx="auto">
+      <Box maxW="60rem" mx="auto" my={4}>
         <Tabs
           position="relative"
           overflow="revert"
@@ -53,21 +84,36 @@ const Notes: React.FC<NotesProps> = ({ initialIndex }) => {
           index={index}
           isFitted
           variant="line"
+          isLazy
         >
-          <TabList
-            position="sticky"
-            top={0}
-            h="auto"
-            bg={tabListBg}
-            style={{ backdropFilter: 'blur(5px)' }}
-            pt={4}
-          >
-            <Tab onClick={() => setTab('')}>Your Notes</Tab>
-            <Tab onClick={() => setTab('usage')}>Usage</Tab>
-            <Tab onClick={() => setTab('profile')}>Profile</Tab>
-            <Tab onClick={() => setTab('settings')}>Settings</Tab>
-          </TabList>
-          <TabPanels>
+          <AnimateSharedLayout>
+            <TabList
+              position="sticky"
+              top={0}
+              h="auto"
+              bg={tabListBg}
+              style={{ backdropFilter: 'blur(5px)' }}
+              pt={4}
+            >
+              <Tab {...tabProps} onClick={() => setTab('')}>
+                Your Notes
+                <TabIndicator tabFor="" selectedTab={selected} />
+              </Tab>
+              <Tab {...tabProps} onClick={() => setTab('usage')}>
+                Usage
+                <TabIndicator tabFor="usage" selectedTab={selected} />
+              </Tab>
+              <Tab {...tabProps} onClick={() => setTab('profile')}>
+                Profile
+                <TabIndicator tabFor="profile" selectedTab={selected} />
+              </Tab>
+              <Tab {...tabProps} onClick={() => setTab('settings')}>
+                Settings
+                <TabIndicator tabFor="settings" selectedTab={selected} />
+              </Tab>
+            </TabList>
+          </AnimateSharedLayout>
+          <TabPanels mt={4}>
             <TabPanel>
               <NotesTab />
             </TabPanel>
@@ -90,9 +136,21 @@ const Notes: React.FC<NotesProps> = ({ initialIndex }) => {
 export default Notes
 
 export const getServerSideProps: GetServerSideProps<Partial<NotesProps>> = async context => {
+  const submenu = context.params?.submenu?.[0]
+  const selectedIndex = URL_TO_TAB_INDEX[context.params!.submenu?.[0]] ?? 0
+
+  if (!submenu || (submenu && selectedIndex)) {
+    return {
+      props: {
+        initialIndex: selectedIndex,
+      },
+    }
+  }
+
   return {
-    props: {
-      initialIndex: URL_TO_TAB_INDEX[context.params!.submenu?.[0]] || 0,
+    redirect: {
+      destination: '/app/dashboard',
+      permanent: false,
     },
   }
 }

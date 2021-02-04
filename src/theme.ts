@@ -9,9 +9,11 @@ interface StyleOptions {
   [k: string]: any
 }
 
+const { purple } = defaultTheme.colors
+
 const theme = extendTheme({
   shadows: {
-    outline: `0 0 0 3px ${defaultTheme.colors.purple[500]}99`,
+    outline: `0 0 0 3px ${purple[500]}99`,
   },
   components: {
     Button: {
@@ -54,12 +56,52 @@ const theme = extendTheme({
     body: `'Open Sans', ${defaultTheme.fonts.body}`,
   },
   styles: {
-    global: (props: StyleOptions) => ({
-      'html, body, #__next': {
-        height: '100%',
-        bg: mode('gray.50', 'gray.800')(props),
-      },
-    }),
+    global: (props: StyleOptions) => {
+      const scrollTrack = mode(purple[50], purple[900])(props)
+      const scrollThumb = purple[400]
+
+      return {
+        'html, body, #__next': {
+          height: '100%',
+          bg: mode('gray.50', 'gray.800')(props),
+        },
+        // Chrome
+        '*::-webkit-scrollbar': {
+          base: {},
+          md: {
+            width: 2,
+            height: 2,
+          },
+        },
+        '*::-webkit-scrollbar-track': {
+          base: {},
+          md: {
+            bg: scrollTrack,
+          },
+        },
+        '.no-track::-webkit-scrollbar-track': {
+          base: {},
+          md: {
+            bg: 'transparent',
+          },
+        },
+        '*::-webkit-scrollbar-thumb': {
+          base: {},
+          md: {
+            bg: 'purple.400',
+            rounded: 'full',
+          },
+        },
+        // Firefox
+        '*': {
+          'scrollbar-width': 'thin',
+          'scrollbar-color': `${scrollThumb} ${scrollTrack}`,
+        },
+        '.no-track': {
+          'scrollbar-color': `${scrollThumb} transparent`,
+        },
+      }
+    },
   },
   config: {
     useSystemColorMode: false,
