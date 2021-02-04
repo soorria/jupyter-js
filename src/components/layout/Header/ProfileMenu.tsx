@@ -37,7 +37,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ user }) => {
         </HStack>
       </MenuButton>
 
-      <MenuList>
+      <MenuList zIndex="popover">
         <MenuGroup title="Profile">
           <Link href="/app/dashboard/profile" passHref>
             <MenuItem as="a" icon={<FiUser />}>

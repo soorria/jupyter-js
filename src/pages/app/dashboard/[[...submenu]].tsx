@@ -92,15 +92,7 @@ const Notes: React.FC<NotesProps> = ({ initialIndex }) => {
           isLazy
         >
           <AnimateSharedLayout>
-            <TabList
-              position="sticky"
-              top="-1px"
-              h="auto"
-              bg={tabListBg}
-              style={{ backdropFilter: 'blur(5px)' }}
-              pt={4}
-              zIndex="docked"
-            >
+            <TabList h="auto" bg={tabListBg} pt={4}>
               <Tab {...tabProps} onClick={() => setTab('')}>
                 <Text as="span" display={{ base: 'none', sm: 'inline' }}>
                   Your{' '}
