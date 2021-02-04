@@ -1,11 +1,10 @@
 import {
   Box,
-  Flex,
-  HStack,
   Icon,
   keyframes,
   Link,
   Spacer,
+  Stack,
   StackDivider,
   Text,
   useColorModeValue,
@@ -82,7 +81,7 @@ const Footer: React.FC<FooterProps> = memo(() => {
 
   return (
     <Box fontFamily="heading" align="center" bg={bg}>
-      <Flex py={2} px={6}>
+      <Stack py={2} px={6} direction={{ base: 'column', md: 'row' }}>
         <Text userSelect="none">
           Made with{' '}
           <Icon
@@ -103,7 +102,12 @@ const Footer: React.FC<FooterProps> = memo(() => {
           </Link>
         </Text>
         <Spacer />
-        <HStack spacing={4} divider={<StackDivider />}>
+        <Stack
+          direction={{ base: 'column', sm: 'row' }}
+          spacing={{ base: 2, sm: 4 }}
+          divider={<StackDivider />}
+          justify="center"
+        >
           <Link isExternal href="https://mooth.tech">
             <Icon mr={2} as={FiGlobe} />
             mooth.tech
@@ -116,8 +120,8 @@ const Footer: React.FC<FooterProps> = memo(() => {
             <Icon mr={2} as={FiCode} />
             Source Code
           </Link>
-        </HStack>
-      </Flex>
+        </Stack>
+      </Stack>
     </Box>
   )
 })

@@ -199,7 +199,7 @@ const plugins = [gfm]
 
 const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ markdown }) => {
   return (
-    <Box maxW="800px" mx="auto">
+    <Box maxW="800px" mx="auto" p={4}>
       <ReactMarkdown source={markdown} plugins={plugins} renderers={renderers} />
     </Box>
   )

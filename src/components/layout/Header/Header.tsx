@@ -3,19 +3,19 @@ import {
   Button,
   ButtonGroup,
   HStack,
-  IconButton,
   Spacer,
-  useColorMode,
+  useBreakpointValue,
   useColorModeValue,
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { signin, useSession } from 'next-auth/client'
-import { FiGithub, FiMoon, FiPlus, FiSun } from 'react-icons/fi'
+import { FiGithub, FiPlus } from 'react-icons/fi'
 import Logo from '../../shared/Logo'
 import { memo, useEffect, useState } from 'react'
 import { Router } from 'next/dist/client/router'
 import Loader from '../../shared/Loader'
 import ProfileMenu from './ProfileMenu'
+import ColorModeToggle from '#src/components/shared/ColorModeToggle'
 
 interface HeaderProps {}
 
@@ -23,9 +23,9 @@ const SPACING = 3
 
 const Header: React.FC<HeaderProps> = memo(() => {
   const [session, sessionLoading] = useSession()
-  const { colorMode, toggleColorMode } = useColorMode()
   const [routeLoading, setRouteLoading] = useState(false)
   const bg = useColorModeValue('gray.100', 'gray.900')
+  const showBurger = useBreakpointValue({ base: true, md: false })
 
   useEffect(() => {
     const handleLoading = () => setRouteLoading(true)
@@ -56,21 +56,19 @@ const Header: React.FC<HeaderProps> = memo(() => {
         spacing={SPACING}
         alignItems="center"
       >
-        <Link href="/app/dashboard" passHref>
-          <Button as="a">Dashboard</Button>
-        </Link>
-        <Link href="/app/note/new" passHref>
-          <Button leftIcon={<FiPlus />} as="a">
-            New Note
-          </Button>
-        </Link>
-        <IconButton
-          aria-label="toggle dark mode"
-          icon={colorMode === 'light' ? <FiMoon /> : <FiSun />}
-          onClick={toggleColorMode}
-        >
-          Toggle Dark Mode
-        </IconButton>
+        {showBurger ? null : (
+          <>
+            <Link href="/app/dashboard" passHref>
+              <Button as="a">Dashboard</Button>
+            </Link>
+            <Link href="/app/note/new" passHref>
+              <Button leftIcon={<FiPlus />} as="a">
+                New Note
+              </Button>
+            </Link>
+          </>
+        )}
+        <ColorModeToggle />
         {session ? (
           <Box>
             <ProfileMenu user={session.user} />

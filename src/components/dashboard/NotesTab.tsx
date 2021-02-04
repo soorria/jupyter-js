@@ -5,6 +5,8 @@ import {
   Button,
   Center,
   Divider,
+  Flex,
+  Grid,
   HStack,
   Icon,
   InputGroup,
@@ -85,7 +87,7 @@ const NotesTab: React.FC<NotesTabProps> = () => {
     <Stack spacing={6}>
       {data ? (
         <>
-          <HStack spacing={4}>
+          <Grid gap={{ base: 2, md: 4 }} templateColumns={{ base: '1fr', sm: '1fr auto' }}>
             <InputGroup>
               <InputLeftElement pointerEvents="none">
                 <FiSearch />
@@ -110,7 +112,7 @@ const NotesTab: React.FC<NotesTabProps> = () => {
                   as={Button}
                   variant="subtle"
                   rightIcon={<FaSort />}
-                  w="12rem"
+                  w={{ base: 'full', md: '10rem' }}
                   leftIcon={!sortKey ? null : <SortDirectionIcon isAscending={sortAsc} />}
                 >
                   {sortKey ? sortKey : 'Sort Notes'}
@@ -145,7 +147,7 @@ const NotesTab: React.FC<NotesTabProps> = () => {
                 </MenuList>
               </Menu>
             </Box>
-          </HStack>
+          </Grid>
           <Divider />
         </>
       ) : null}
@@ -164,16 +166,19 @@ const NotesTab: React.FC<NotesTabProps> = () => {
             spacing={6}
           >
             <Box flex="1 1">
-              <Text fontize="xl" fontWeight="bold" mb={4}>
+              <Text fontize="xl" fontWeight="bold" mb={{ base: 2, md: 4 }}>
                 {note.title}
               </Text>
-              <HStack fontSize="sm">
-                <Icon as={FiClock} />
-                <Text>{format(new Date(note.createdAt), 'hh:mm dd/MM/yyyy')}</Text>
-                <Divider orientation="vertical" />
-                <Icon as={FiEdit} />
-                <Text>{format(new Date(note.updatedAt), 'hh:mm dd/MM/yyyy')}</Text>
-              </HStack>
+              <Stack direction={{ base: 'column', sm: 'row' }} fontSize={{ base: 'xs', md: 'sm' }}>
+                <Flex align="center">
+                  <Icon as={FiClock} mr={2} />
+                  <Text>{format(new Date(note.createdAt), 'hh:mm dd/MM/yyyy')}</Text>
+                </Flex>
+                <Flex align="center">
+                  <Icon as={FiEdit} mr={2} />
+                  <Text>{format(new Date(note.updatedAt), 'hh:mm dd/MM/yyyy')}</Text>
+                </Flex>
+              </Stack>
             </Box>
             <Box textAlign="right">
               <Text>{note.order.length} cells</Text>

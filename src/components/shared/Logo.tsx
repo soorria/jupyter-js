@@ -1,4 +1,4 @@
-import { Heading, HeadingProps, keyframes } from '@chakra-ui/react'
+import { Heading, HeadingProps, keyframes, Text } from '@chakra-ui/react'
 import { forwardRef } from 'react'
 
 type LogoProps = HeadingProps
@@ -27,7 +27,11 @@ const Logo: React.FC<LogoProps> = forwardRef<HTMLHeadingElement, LogoProps>(({ .
       ref={ref as any}
       {...rest}
     >
-      jupyter.js
+      j
+      <Text as="span" display={{ base: 'none', sm: 'inline' }}>
+        upyter.
+      </Text>
+      js
     </Heading>
   )
 })

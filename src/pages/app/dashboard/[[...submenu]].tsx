@@ -11,6 +11,8 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  Text,
+  useBreakpointValue,
   useColorModeValue,
   useToken,
 } from '@chakra-ui/react'
@@ -74,9 +76,11 @@ const Notes: React.FC<NotesProps> = ({ initialIndex }) => {
   const gray = useToken('colors', 'gray.800')
   const tabListBg = useColorModeValue('whiteAlpha.600', `${gray}7A`)
 
+  const tabsSize = useBreakpointValue({ base: 'sm', sm: 'md' })
+
   return (
     <MainLayout>
-      <Box maxW="60rem" mx="auto" my={4}>
+      <Box maxW="60rem" mx="auto" my={{ base: 0, md: 4 }}>
         <Tabs
           position="relative"
           overflow="revert"
@@ -84,19 +88,24 @@ const Notes: React.FC<NotesProps> = ({ initialIndex }) => {
           index={index}
           isFitted
           variant="line"
+          size={tabsSize}
           isLazy
         >
           <AnimateSharedLayout>
             <TabList
               position="sticky"
-              top={0}
+              top="-1px"
               h="auto"
               bg={tabListBg}
               style={{ backdropFilter: 'blur(5px)' }}
               pt={4}
+              zIndex="docked"
             >
               <Tab {...tabProps} onClick={() => setTab('')}>
-                Your Notes
+                <Text as="span" display={{ base: 'none', sm: 'inline' }}>
+                  Your{' '}
+                </Text>
+                Notes
                 <TabIndicator tabFor="" selectedTab={selected} />
               </Tab>
               <Tab {...tabProps} onClick={() => setTab('usage')}>
