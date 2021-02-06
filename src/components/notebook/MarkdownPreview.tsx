@@ -33,9 +33,11 @@ if (__is_client__) {
   /* eslint-disable @typescript-eslint/no-var-requires */
   dracula = require('react-syntax-highlighter/dist/cjs/styles/prism/dracula').default
   const jsx = require('react-syntax-highlighter/dist/cjs/languages/prism/jsx').default
+  const json = require('react-syntax-highlighter/dist/cjs/languages/prism/json').default
   const markdown = require('react-syntax-highlighter/dist/cjs/languages/prism/markdown').default
   const javascript = require('react-syntax-highlighter/dist/cjs/languages/prism/javascript').default
   SyntaxHighlighter.registerLanguage('jsx', jsx)
+  SyntaxHighlighter.registerLanguage('json', json)
   SyntaxHighlighter.registerLanguage('markdown', markdown)
   SyntaxHighlighter.registerLanguage('javascript', javascript)
   /* eslint-enable @typescript-eslint/no-var-requires */
@@ -108,7 +110,7 @@ const LIST_PROPS = {
   my: 5,
 }
 
-const ALLOWED_CODE_BLOCK_LANGUAGES = ['javascript', 'jsx', 'markdown']
+const ALLOWED_CODE_BLOCK_LANGUAGES = ['javascript', 'jsx', 'markdown', 'json']
 
 const LinkRenderer: React.FC<any> = props => (
   <Link href={props.href} isExternal color={usePurple()}>
