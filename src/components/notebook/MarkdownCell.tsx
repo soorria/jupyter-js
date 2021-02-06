@@ -82,7 +82,7 @@ const MarkdownCell: React.FC<MarkdownCellProps> = ({
     >
       <SimpleGrid
         w="100%"
-        onClick={handleStartEditing}
+        onDoubleClick={handleStartEditing}
         ref={wrapperRef}
         columns={2}
         gap={4}

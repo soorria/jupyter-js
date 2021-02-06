@@ -96,7 +96,7 @@ const NotesTab: React.FC<NotesTabProps> = () => {
                 pl={10}
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                placeholder="Search Note Name"
+                placeholder="Search Notes"
                 variant="filled"
               />
               <InputRightElement width="4.5rem">

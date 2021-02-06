@@ -25,6 +25,17 @@ import {
 import styled from '@emotion/styled'
 import ReactMarkdown from 'react-markdown'
 import gfm from 'remark-gfm'
+import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { __is_client__ } from '#src/constants'
+
+let dracula: any
+if (__is_client__) {
+  /* eslint-disable @typescript-eslint/no-var-requires */
+  dracula = require('react-syntax-highlighter/dist/cjs/styles/prism/dracula').default
+  const jsx = require('react-syntax-highlighter/dist/cjs/languages/prism/jsx').default
+  SyntaxHighlighter.registerLanguage('jsx', jsx)
+  /* eslint-enable @typescript-eslint/no-var-requires */
+}
 
 interface MarkdownPreviewProps {
   markdown: string
@@ -39,8 +50,8 @@ const Root = styled.div`
   ol ul,
   ol ol,
   li p {
-    margin-top: 0.75rem;
-    margin-bottom: 0.75rem;
+    margin-top: 0.75rem !important;
+    margin-bottom: 0.75rem !important;
   }
 
   > ul > li > *:first-of-type:not(.task-checkbox),
@@ -92,6 +103,8 @@ const LIST_PROPS = {
   ml: 0,
   my: 5,
 }
+
+const ALLOWED_CODE_BLOCK_LANGUAGES = ['javascript', 'jsx', 'markdown']
 
 const LinkRenderer: React.FC<any> = props => (
   <Link href={props.href} isExternal color={usePurple()}>
@@ -188,12 +201,20 @@ const renderers = {
     </Code>
   ),
   code: props => {
-    // console.log('code', props)
+    // Return early if empty to stop parser errors
+    if (!props.value || !ALLOWED_CODE_BLOCK_LANGUAGES.includes(props.language)) return null
+
     return (
-      <Box as="code">
-        <Box as="pre">{props.value}</Box>
-      </Box>
+      <SyntaxHighlighter language={props.language} style={dracula}>
+        {props.value}
+      </SyntaxHighlighter>
     )
+
+    // return (
+    //   <Box as="code">
+    //     <Box as="pre">{props.value}</Box>
+    //   </Box>
+    // )
   },
 } as Record<string, React.ComponentType<any>>
 
@@ -203,9 +224,14 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ markdown, editing }) 
   return (
     <Box maxW="800px" mx="auto" p={4}>
       {markdown || editing ? (
-        <ReactMarkdown source={markdown} plugins={plugins} renderers={renderers} />
+        <ReactMarkdown
+          linkTarget={() => '_blank'}
+          source={markdown}
+          plugins={plugins}
+          renderers={renderers}
+        />
       ) : (
-        <Center h="10vh">Click to edit this cell</Center>
+        <Center h="10vh">Double Click to edit this cell</Center>
       )}
     </Box>
   )

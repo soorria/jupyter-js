@@ -95,7 +95,7 @@ const Notes: React.FC<NotesProps> = ({ initialIndex }) => {
             <TabList h="auto" bg={tabListBg} pt={4}>
               <Tab {...tabProps} onClick={() => setTab('')}>
                 <Text as="span" display={{ base: 'none', sm: 'inline' }}>
-                  Your{' '}
+                  Your&nbsp;
                 </Text>
                 Notes
                 <TabIndicator tabFor="" selectedTab={selected} />
