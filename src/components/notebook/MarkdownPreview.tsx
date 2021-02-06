@@ -33,7 +33,11 @@ if (__is_client__) {
   /* eslint-disable @typescript-eslint/no-var-requires */
   dracula = require('react-syntax-highlighter/dist/cjs/styles/prism/dracula').default
   const jsx = require('react-syntax-highlighter/dist/cjs/languages/prism/jsx').default
+  const markdown = require('react-syntax-highlighter/dist/cjs/languages/prism/markdown').default
+  const javascript = require('react-syntax-highlighter/dist/cjs/languages/prism/javascript').default
   SyntaxHighlighter.registerLanguage('jsx', jsx)
+  SyntaxHighlighter.registerLanguage('markdown', markdown)
+  SyntaxHighlighter.registerLanguage('javascript', javascript)
   /* eslint-enable @typescript-eslint/no-var-requires */
 }
 
