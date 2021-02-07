@@ -42,9 +42,10 @@ const bundle = async (inputCode: string): Promise<BuildResult> => {
         'process.env.NODE_ENV': '"production"',
         global: 'window',
       },
-      jsxFactory: '__esbuild_React.createElement',
-      jsxFragment: '__esbuild_React.Fragment',
+      jsxFactory: '__esbuild_createElement',
+      jsxFragment: '__esbuild_Fragment',
     })
+    console.log({ inputCode })
 
     return {
       time: Date.now() - start,

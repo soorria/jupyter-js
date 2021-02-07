@@ -66,7 +66,7 @@ const NotesTab: React.FC<NotesTabProps> = () => {
     let result = data
 
     if (search) {
-      result = result.filter(note => note.title.toLowerCase().includes(search.toLowerCase()))
+      result = result.filter(note => note.title.toLowerCase().includes(search.trim().toLowerCase()))
     }
 
     if (sortKey) {
@@ -100,7 +100,7 @@ const NotesTab: React.FC<NotesTabProps> = () => {
                 variant="filled"
               />
               <InputRightElement width="4.5rem">
-                <Button h="1.75rem" size="sm" onClick={() => setSearch('')}>
+                <Button h="1.75rem" size="sm" onClick={() => setSearch('')} isDisabled={!search}>
                   Clear
                 </Button>
               </InputRightElement>

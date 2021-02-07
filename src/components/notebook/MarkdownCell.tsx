@@ -1,4 +1,5 @@
 import useClickAway from '#src/hooks/use-click-away'
+import useLocalStorage from '#src/hooks/use-local-storage'
 import { Box, Icon, IconButton, SimpleGrid, Tooltip } from '@chakra-ui/react'
 import { useEffect, useRef, useState } from 'react'
 import { FiEdit2, FiFileText, FiMaximize2, FiMinimize2, FiSave } from 'react-icons/fi'
@@ -11,6 +12,7 @@ interface MarkdownCellProps {
   onChange: (value: string) => any
   onDelete?: () => any
   onMove?: (direction: 'UP' | 'DOWN') => any
+  cellId: string
 }
 
 const MarkdownCell: React.FC<MarkdownCellProps> = ({
@@ -18,12 +20,13 @@ const MarkdownCell: React.FC<MarkdownCellProps> = ({
   onDelete,
   onMove,
   initialValue,
+  cellId,
 }) => {
   const [input, setInput] = useState(initialValue)
   const wrapperRef = useRef<HTMLDivElement>(null)
   const [editing, setEditing] = useState(false)
   const [hasBeenOpened, setHasBeenOpened] = useState(false)
-  const [maximised, setMaximised] = useState(false)
+  const [maximised, setMaximised] = useLocalStorage(cellId, false)
 
   useEffect(() => {
     onChange(input)
@@ -71,7 +74,7 @@ const MarkdownCell: React.FC<MarkdownCellProps> = ({
             <IconButton
               icon={maximised ? <FiMinimize2 /> : <FiMaximize2 />}
               isDisabled={editing}
-              onClick={() => setMaximised(prev => !prev)}
+              onClick={() => setMaximised(!maximised)}
               aria-label="Edit this cell"
             />
           </Tooltip>

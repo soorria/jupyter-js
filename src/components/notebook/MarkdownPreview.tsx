@@ -2,16 +2,19 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import {
   Box,
+  Button,
   Center,
   Checkbox,
   Code,
   Divider,
   Heading,
   HeadingProps,
+  HStack,
   Image,
   Link,
   ListItem,
   OrderedList,
+  Spacer,
   Table,
   Tbody,
   Td,
@@ -20,13 +23,16 @@ import {
   Thead,
   Tr,
   UnorderedList,
+  useClipboard,
   useColorModeValue,
+  useToken,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import ReactMarkdown from 'react-markdown'
 import gfm from 'remark-gfm'
 import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { __is_client__ } from '#src/constants'
+import capitalise from '#src/utils/capitalise'
 
 let dracula: any
 if (__is_client__) {
@@ -68,6 +74,10 @@ const Root = styled.div`
   > ul > li > *:last-child,
   > ol > li > *:last-child {
     margin-bottom: 1.25rem;
+  }
+
+  [data-code] + [data-code] {
+    margin-top: 1.5rem;
   }
 `
 
@@ -126,7 +136,7 @@ const Break: React.FC<any> = () => (
   <Divider borderBottomWidth="2px" borderColor={usePurple()} my={8} />
 )
 
-const renderers = {
+const renderers: Record<string, React.ComponentType<any>> = {
   thematicBreak: Break,
   paragraph: props => <Text {...props} my={4} />,
   heading: props => (
@@ -207,20 +217,56 @@ const renderers = {
     </Code>
   ),
   code: props => {
-    // Return early if empty to stop parser errors
-    if (!props.value || !ALLOWED_CODE_BLOCK_LANGUAGES.includes(props.language)) return null
+    const language = props.language.toLowerCase()
+
+    const purpleToken = usePurple()
+    const purpleColor = useToken('colors', purpleToken)
+    const highlighterWrapperStyles = dracula['pre[class*="language-"]']
+
+    const { hasCopied, onCopy } = useClipboard(props.value, 10000)
 
     return (
-      <SyntaxHighlighter language={props.language} style={dracula}>
-        {props.value}
-      </SyntaxHighlighter>
+      <Box
+        bg={highlighterWrapperStyles.background}
+        position="relative"
+        p={4}
+        pt={12}
+        borderRadius={highlighterWrapperStyles.borderRadius}
+        // border={`1px solid ${purpleColor}`}
+        boxShadow={`0 0 0 1px ${purpleColor}`}
+        // _focusWithin={`0 0 0 2px ${purpleColor}`}
+        data-code
+      >
+        <code>
+          {!props.value || !ALLOWED_CODE_BLOCK_LANGUAGES.includes(language) ? (
+            <Box as="pre">{props.value}</Box>
+          ) : (
+            <SyntaxHighlighter language={language} style={dracula} customStyle={{ padding: 0 }}>
+              {props.value}
+            </SyntaxHighlighter>
+          )}
+        </code>
+        <HStack position="absolute" top={4} left={4} right={4} spacing={2}>
+          <Text>{capitalise(props.language)}</Text>
+          {props.value ? null : (
+            <Text fontSize="sm" fontStyle="italic" opacity={0.7}>
+              (empty)
+            </Text>
+          )}
+          <Spacer />
+          <Button
+            h="1.5rem"
+            size="sm"
+            colorScheme="purple"
+            variant="subtle"
+            onClick={onCopy}
+            w="4rem"
+          >
+            {hasCopied ? 'Copied' : 'Copy'}
+          </Button>
+        </HStack>
+      </Box>
     )
-
-    // return (
-    //   <Box as="code">
-    //     <Box as="pre">{props.value}</Box>
-    //   </Box>
-    // )
   },
 } as Record<string, React.ComponentType<any>>
 

@@ -221,6 +221,7 @@ const NotePage: React.FC<NotePageProps> = () => {
                           onChange={handleCellUpdate(cellId)}
                           onMove={handleCellMove(cellId)}
                           onDelete={handleCellDelete(cellId)}
+                          cellId={cellId}
                         />
                       ) : (
                         <>
@@ -229,6 +230,7 @@ const NotePage: React.FC<NotePageProps> = () => {
                             onChange={handleCellUpdate(cellId)}
                             onMove={handleCellMove(cellId)}
                             onDelete={handleCellDelete(cellId)}
+                            cellId={cellId}
                           />
                         </>
                       )}

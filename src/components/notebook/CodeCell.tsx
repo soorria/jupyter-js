@@ -1,11 +1,22 @@
 import { useDebounce, useMounted } from '#src/hooks'
 import { bundle } from '#src/lib/bundler'
-import { Button, Flex, Icon } from '@chakra-ui/react'
+import {
+  Button,
+  Flex,
+  Icon,
+  IconButton,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+} from '@chakra-ui/react'
 import type { Editor } from 'codemirror'
 import { format } from 'prettier'
 import parser from 'prettier/parser-babel'
 import { useEffect, useRef, useState } from 'react'
-import { FiCode } from 'react-icons/fi'
+import { FiBox, FiCode } from 'react-icons/fi'
 import Resizable from '../shared/Resizable'
 import CellShell from './CellShell'
 import CodeEditor from './CodeEditor'
@@ -16,7 +27,40 @@ interface CodeCellProps {
   onChange: (value: string) => any
   onDelete?: () => any
   onMove?: (direction: 'UP' | 'DOWN') => any
+  cellId: string
 }
+
+const helperCode = `
+import { createElement as __esbuild_createElement, Fragment as __esbuild_Fragment } from 'react'
+import { render as __esbuild_render } from 'react-dom'
+
+let __react_render_count__ = 0
+
+const show = (...args) => {
+  const root = document.querySelector('#root')
+
+  const _show = (arg) => {
+    console.dir(arg)
+
+    if (typeof arg === 'object') {
+      if (arg.$$typeof && arg.props) {
+        const reactRoot = document.createElement('div')
+        reactRoot.id = 'react-root-' + (++__react_render_count__)
+        root.appendChild(reactRoot)
+        __esbuild_render(arg, reactRoot)
+      } else if (Array.isArray(arg)) {
+        arg.forEach(el => _show(el))
+      } else {
+        root.innerHTML += '\\n' + JSON.stringify(arg)
+      }
+    } else {
+      root.innerHTML += '\\n' + arg
+    }
+  }
+
+  args.forEach(arg => _show(arg))
+}
+`
 
 const CodeCell: React.FC<CodeCellProps> = ({ initialValue, onChange, onMove, onDelete }) => {
   const [input, setInput] = useState(initialValue)
@@ -25,6 +69,7 @@ const CodeCell: React.FC<CodeCellProps> = ({ initialValue, onChange, onMove, onD
   const [loading, setLoading] = useState(false)
   const [formatting, setFormatting] = useState(false)
   const mounted = useMounted()
+  const [showModal, setShowModal] = useState(false)
 
   const editor = useRef<Editor>()
 
@@ -37,7 +82,7 @@ const CodeCell: React.FC<CodeCellProps> = ({ initialValue, onChange, onMove, onD
           setLoading(true)
         }
       }, 500)
-      const result = await bundle(input)
+      const result = await bundle(helperCode + input)
       bundledCode = result.code
       setCode(bundledCode)
     } catch (err) {
@@ -92,6 +137,11 @@ const CodeCell: React.FC<CodeCellProps> = ({ initialValue, onChange, onMove, onD
             <Button onClick={formatInput} isLoading={formatting}>
               Format
             </Button>
+            <IconButton
+              aria-label="show bundle"
+              icon={<FiBox />}
+              onClick={() => setShowModal(true)}
+            />
           </>
         }
         onDelete={onDelete}
@@ -118,6 +168,17 @@ const CodeCell: React.FC<CodeCellProps> = ({ initialValue, onChange, onMove, onD
           }
         />
       </CellShell>
+
+      <Modal size="xl" isOpen={showModal} onClose={() => setShowModal(false)}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Bundled Code</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody as="code">
+            <pre>{code}</pre>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </>
   )
 }
