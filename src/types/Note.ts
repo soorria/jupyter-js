@@ -11,6 +11,6 @@ interface INote {
   updatedAt: string | Date
 }
 
-export type NoteDocument = INote & Document
+export type NoteDocument = INote & Document<string>
 
 export default INote
