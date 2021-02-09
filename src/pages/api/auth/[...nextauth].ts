@@ -1,4 +1,6 @@
 import { __dev__ } from '#src/constants'
+import { User } from '#src/lib/db/models'
+import { UserDocument } from '#src/types/User'
 import { NextApiHandler } from 'next'
 import NextAuth, { InitOptions } from 'next-auth'
 
@@ -28,13 +30,19 @@ const options: InitOptions = {
       return { ...session, user: sessionUser }
     },
     async jwt(token, user, _account, profile) {
-      // console.log({ token, user, account, profile, isNew })
-
       let result = token
 
       if (user?.id) {
         const id = user.id
-        result = { ...token, id, username: profile.login }
+
+        const dbUser: UserDocument = await User.findById(id)
+
+        if (!dbUser.username && profile.login) {
+          dbUser.username = profile.login
+          await dbUser.save()
+        }
+
+        result = { ...token, id, username: profile.login, role: dbUser.role }
       }
 
       return result

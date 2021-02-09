@@ -6,6 +6,7 @@ interface IUser {
   _id: string
   name: string
   role: UserRole
+  username?: string
   image?: string
   email?: string
 }
