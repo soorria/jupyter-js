@@ -52,7 +52,7 @@ const Header: React.FC<HeaderProps> = memo(() => {
     }
   }, [])
 
-  const links = (
+  const links = session ? (
     <>
       <Link href="/app/dashboard" passHref>
         <Button as="a">Dashboard</Button>
@@ -63,7 +63,7 @@ const Header: React.FC<HeaderProps> = memo(() => {
         </Button>
       </Link>
     </>
-  )
+  ) : null
 
   const authStateButton = session ? (
     <Box>

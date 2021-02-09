@@ -1,4 +1,5 @@
-import mongoose from 'mongoose'
+import { NoteDocument } from '#src/types/Note'
+import mongoose, { Model } from 'mongoose'
 import { CellSchema } from './Cell'
 
 export const NoteSchema = new mongoose.Schema(
@@ -21,4 +22,4 @@ export const NoteSchema = new mongoose.Schema(
   { timestamps: true }
 )
 
-export const Note = mongoose.models.note || mongoose.model('note', NoteSchema)
+export const Note: Model<NoteDocument> = mongoose.models.note || mongoose.model('note', NoteSchema)

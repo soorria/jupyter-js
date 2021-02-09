@@ -1,7 +1,6 @@
 import { nc } from '#src/lib/api'
 import { ensureAuth, ensureDbConnection } from '#src/lib/api/middleware'
 import { Note } from '#src/lib/db/models'
-import { NoteDocument } from '#src/types/Note'
 import sleep from '#src/utils/sleep'
 
 const handler = nc()
@@ -18,7 +17,7 @@ const handler = nc()
 
     const note = new Note({
       owner: req.user!.id,
-    }) as NoteDocument
+    })
 
     await note.save()
 

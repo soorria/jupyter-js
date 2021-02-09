@@ -2,8 +2,8 @@ import { nc } from '#src/lib/api'
 import HTTPError from '#src/lib/api/errors'
 import { ensureAuth, ensureDbConnection } from '#src/lib/api/middleware'
 import { Note } from '#src/lib/db/models'
-import INote from '#src/types/Note'
-import { Document, isValidObjectId } from 'mongoose'
+import INote, { NoteDocument } from '#src/types/Note'
+import { isValidObjectId } from 'mongoose'
 
 export default nc()
   .use(ensureAuth, ensureDbConnection)
@@ -28,7 +28,7 @@ export default nc()
   .patch(async (req, res) => {
     const updates: Partial<INote> = req.body
 
-    const note: Document & INote = await Note.findOne({ _id: req.query.id, owner: req.user!.id })
+    const note: NoteDocument = await Note.findOne({ _id: req.query.id, owner: req.user!.id })
 
     if (!note) {
       throw new HTTPError(404)

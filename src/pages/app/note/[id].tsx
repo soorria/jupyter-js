@@ -19,7 +19,6 @@ import { Fragment, useRef, useState } from 'react'
 import { FiCheckCircle, FiEdit2, FiSave, FiX } from 'react-icons/fi'
 import useSWR from 'swr'
 
-import MainLayout from '#src/components/layout/MainLayout'
 import AddCell from '#src/components/notebook/AddCell'
 import AddFirstCell from '#src/components/notebook/AddFirstCell'
 import CodeCell from '#src/components/notebook/CodeCell'
@@ -30,6 +29,9 @@ import fetcher from '#src/lib/fetcher'
 import INote from '#src/types/Note'
 import allSettled from '#src/utils/allSettled'
 import MarkdownCell from '#src/components/notebook/MarkdownCell'
+import AuthedLayout from '#src/components/layout/AuthedLayout'
+import { GetServerSideProps } from 'next'
+import { getSession } from 'next-auth/client'
 
 interface NotePageProps {}
 
@@ -135,7 +137,7 @@ const NotePage: React.FC<NotePageProps> = () => {
   }
 
   return (
-    <MainLayout>
+    <AuthedLayout>
       {mounted && !loading ? (
         note ? (
           <Box mb="30vh" mt={4} mx={{ base: 4, md: 8 }} position="relative">
@@ -256,8 +258,16 @@ const NotePage: React.FC<NotePageProps> = () => {
           <Loader size="xl" />
         </Center>
       )}
-    </MainLayout>
+    </AuthedLayout>
   )
 }
 
 export default NotePage
+
+export const getServerSideProps: GetServerSideProps = async context => {
+  const session = await getSession(context)
+  if (!session) return { redirect: { destination: '/', permanent: false } }
+  return {
+    props: {},
+  }
+}

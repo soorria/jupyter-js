@@ -2,7 +2,7 @@ import NotesTab from '#src/components/dashboard/NotesTab'
 import ProfileTab from '#src/components/dashboard/ProfileTab'
 import SettingsTab from '#src/components/dashboard/SettingsTab'
 import UsageTab from '#src/components/dashboard/UsageTab'
-import MainLayout from '#src/components/layout/MainLayout'
+import AuthedLayout from '#src/components/layout/AuthedLayout'
 import MotionBox from '#src/components/shared/MotionBox'
 import {
   Box,
@@ -18,17 +18,20 @@ import {
 } from '@chakra-ui/react'
 import { AnimateSharedLayout } from 'framer-motion'
 import { GetServerSideProps } from 'next'
+import { getSession } from 'next-auth/client'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
 interface NotesProps {
   initialIndex: number
+  initialSelected: string
 }
 
 const URL_TO_TAB_INDEX: Record<string, number> = {
+  '': 0,
+  notes: 0,
   usage: 1,
-  profile: 2,
-  settings: 3,
+  settings: 2,
 }
 
 const useSelectedTabColor = () => useColorModeValue('purple.600', 'purple.300')
@@ -53,10 +56,10 @@ const TabIndicator: React.FC<{ tabFor: string; selectedTab: string }> = ({
   ) : null
 }
 
-const Notes: React.FC<NotesProps> = ({ initialIndex }) => {
+const Notes: React.FC<NotesProps> = ({ initialIndex, initialSelected }) => {
   const router = useRouter()
-  const { submenu = [] } = router.query
-  const [selected = ''] = submenu
+  // const { submenu = [] } = router.query
+  const [selected, setSelected] = useState(initialSelected)
   const [index, setIndex] = useState(initialIndex || 0)
   const selectedColor = useSelectedTabColor()
 
@@ -70,8 +73,10 @@ const Notes: React.FC<NotesProps> = ({ initialIndex }) => {
     setIndex(URL_TO_TAB_INDEX[selected] || 0)
   }, [selected])
 
-  const setTab = (tabname: string) =>
+  const setTab = (tabname: string) => {
+    setSelected(tabname)
     router.push('/app/dashboard', `/app/dashboard/${tabname}`, { shallow: true })
+  }
 
   const gray = useToken('colors', 'gray.800')
   const tabListBg = useColorModeValue('whiteAlpha.600', `${gray}7A`)
@@ -79,14 +84,14 @@ const Notes: React.FC<NotesProps> = ({ initialIndex }) => {
   const tabsSize = useBreakpointValue({ base: 'sm', sm: 'md' })
 
   return (
-    <MainLayout>
+    <AuthedLayout>
       <Box maxW="60rem" mx="auto" my={{ base: 0, md: 4 }}>
         <Tabs
           position="relative"
           overflow="revert"
           colorScheme="purple"
           index={index}
-          isFitted
+          // isFitted
           variant="line"
           size={tabsSize}
           isLazy
@@ -103,10 +108,6 @@ const Notes: React.FC<NotesProps> = ({ initialIndex }) => {
               <Tab {...tabProps} onClick={() => setTab('usage')}>
                 Usage
                 <TabIndicator tabFor="usage" selectedTab={selected} />
-              </Tab>
-              <Tab {...tabProps} onClick={() => setTab('profile')}>
-                Profile
-                <TabIndicator tabFor="profile" selectedTab={selected} />
               </Tab>
               <Tab {...tabProps} onClick={() => setTab('settings')}>
                 Settings
@@ -130,20 +131,24 @@ const Notes: React.FC<NotesProps> = ({ initialIndex }) => {
           </TabPanels>
         </Tabs>
       </Box>
-    </MainLayout>
+    </AuthedLayout>
   )
 }
 
 export default Notes
 
-export const getServerSideProps: GetServerSideProps<Partial<NotesProps>> = async context => {
-  const submenu = context.params?.submenu?.[0]
+export const getServerSideProps: GetServerSideProps<NotesProps> = async context => {
+  const session = await getSession(context)
+  if (!session) return { redirect: { destination: '/', permanent: false } }
+  const submenu = context.params?.submenu?.[0] ?? ''
+
   const selectedIndex = URL_TO_TAB_INDEX[context.params!.submenu?.[0]] ?? 0
 
   if (!submenu || (submenu && selectedIndex)) {
     return {
       props: {
         initialIndex: selectedIndex,
+        initialSelected: submenu,
       },
     }
   }
