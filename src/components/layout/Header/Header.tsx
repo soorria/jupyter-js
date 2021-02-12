@@ -16,8 +16,8 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react'
 import Link from 'next/link'
-import { signin, useSession } from 'next-auth/client'
-import { FiGithub, FiMenu, FiPlus } from 'react-icons/fi'
+import { useSession } from 'next-auth/client'
+import { FiMenu, FiPlus } from 'react-icons/fi'
 import Logo from '../../shared/Logo'
 import { memo, useEffect, useState } from 'react'
 import { Router } from 'next/dist/client/router'
@@ -58,7 +58,7 @@ const Header: React.FC<HeaderProps> = memo(() => {
         <Button as="a">Dashboard</Button>
       </Link>
       <Link href="/app/note/new" passHref>
-        <Button leftIcon={<FiPlus />} as="a">
+        <Button as="a" leftIcon={<FiPlus />}>
           New Note
         </Button>
       </Link>
@@ -70,9 +70,11 @@ const Header: React.FC<HeaderProps> = memo(() => {
       <ProfileMenu user={session.user} />
     </Box>
   ) : (
-    <Button onClick={() => signin('github')} leftIcon={<FiGithub />} isLoading={sessionLoading}>
-      Sign In
-    </Button>
+    <Link href="/login" passHref>
+      <Button variant="subtle" isLoading={sessionLoading}>
+        Sign Up / Sign In
+      </Button>
+    </Link>
   )
 
   return (

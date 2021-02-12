@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react'
 import axios from 'axios'
 import { useRouter } from 'next/router'
-import { Fragment, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { FiCheckCircle, FiEdit2, FiSave, FiX } from 'react-icons/fi'
 import useSWR from 'swr'
 
@@ -49,6 +49,22 @@ const NotePage: React.FC<NotePageProps> = () => {
   const [disableTitleUpdate, setDisableTitleUpdate] = useState(false)
   const updatedSet = useRef(new Set<string>())
   const [saving, setSaving] = useState(false)
+  const [blockLeave, setBlockLeave] = useState(false)
+
+  useEffect(() => {
+    if (blockLeave) {
+      console.log('blocking')
+      const handler = (e: BeforeUnloadEvent) => {
+        e.returnValue = 'You may have unsaved changes.'
+        return 'You may have unsaved changes.'
+      }
+      window.addEventListener('beforeunload', handler)
+      return () => {
+        console.log('not blocking')
+        window.removeEventListener('beforeunload', handler)
+      }
+    }
+  }, [blockLeave])
 
   const { data: note, error, isValidating, revalidate, mutate } = useSWR<INote>(
     id ? `/api/notes/${id}` : null,
@@ -73,6 +89,7 @@ const NotePage: React.FC<NotePageProps> = () => {
     )
 
     setSaving(false)
+    setBlockLeave(false)
 
     revalidate()
   }, 1000)
@@ -92,6 +109,7 @@ const NotePage: React.FC<NotePageProps> = () => {
       const cell = data!.cells![cellId]
 
       if (!cell) return
+      setBlockLeave(true)
 
       data!.cells![cellId] = { ...cell, contents: value }
 
@@ -121,8 +139,6 @@ const NotePage: React.FC<NotePageProps> = () => {
     } catch (err) {
       console.dir(err)
     }
-
-    debouncedUpdate()
   }
 
   const handleCellDelete = (cellId: string) => async () => {

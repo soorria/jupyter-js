@@ -1,21 +1,30 @@
 import mongoose, { Document } from 'mongoose'
 import { nc } from '#src/lib/api'
-import { ensureAuth, ensureDbConnection } from '#src/lib/api/middleware'
+import { ensureAuth } from '#src/lib/api/middleware'
 import { Note } from '#src/lib/db/models'
 import HTTPError from '#src/lib/api/errors'
 import ICell, { VALID_CELL_TYPES } from '#src/types/Cell'
 import INote from '#src/types/Note'
 import { nanoid } from 'nanoid'
+import { getNumCellsByUser } from '#src/lib/db/aggregates'
+import { CELL_LIMITS } from '#src/constants'
 
 export default nc()
-  .use(ensureAuth, ensureDbConnection)
+  .use(ensureAuth)
   .post(async (req, res) => {
     const { id: noteId } = req.query
     const { type, prevCellId } = req.body
 
     // noteId is invalid
-    if (!mongoose.isValidObjectId(noteId)) {
+    if (typeof noteId !== 'string' || !mongoose.isValidObjectId(noteId)) {
       throw new HTTPError(406, 'Invalid noteId')
+    }
+
+    const currNumCells = await getNumCellsByUser(req.user!.id)
+    const cellsLimit = CELL_LIMITS[req.user!.role]
+
+    if (currNumCells >= cellsLimit) {
+      throw new HTTPError(403, 'Plan quota reached')
     }
 
     // Cell type is invalid

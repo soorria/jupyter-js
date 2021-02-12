@@ -1,5 +1,5 @@
 import { mode, transparentize } from '@chakra-ui/theme-tools'
-import { extendTheme, theme as defaultTheme, Theme } from '@chakra-ui/react'
+import { extendTheme, keyframes, theme as defaultTheme, Theme } from '@chakra-ui/react'
 import { __dev__, __is_client__ } from './constants'
 
 interface StyleOptions {
@@ -10,6 +10,15 @@ interface StyleOptions {
 }
 
 const { purple } = defaultTheme.colors
+
+const bgGradientHover = keyframes`
+  from {
+    background-position: left;
+  }
+  to {
+    background-position: right;
+  }
+`
 
 const theme = extendTheme({
   shadows: {
@@ -39,10 +48,84 @@ const theme = extendTheme({
             },
           }
         },
+        gradientBorder: (props: StyleOptions) => {
+          const { colorScheme: c } = props
+
+          const afterBg = mode(`${c}.50`, `${c}.800`)(props)
+
+          const activeStyle = {
+            color: mode(`${c}.50`, `${c}.900`)(props),
+            _after: {
+              opacity: 0,
+            },
+          }
+
+          return {
+            bg: 'transparent',
+            color: mode(`${c}.700`, `${c}.200`)(props),
+            position: 'relative',
+            zIndex: 0,
+            _before: {
+              content: '""',
+              position: 'absolute',
+              bgGradient:
+                'linear(45deg, pink.400, purple.400, cyan.300, blue.300, pink.400, purple.400)',
+              animation: `${bgGradientHover} 2000ms linear infinite`,
+              animationPlayState: 'paused',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundSize: '600%',
+              rounded: 'md',
+              zIndex: -1,
+              transition: 'all 200ms ease-in-out',
+            },
+            _hover: {
+              _before: {
+                animationPlayState: 'running',
+              },
+            },
+            _active: activeStyle,
+            _focus: {
+              _before: {
+                animationPlayState: 'running',
+              },
+            },
+            _after: {
+              content: '""',
+              position: 'absolute',
+              top: 'var(--bg-inset, 2px)',
+              left: 'var(--bg-inset, 2px)',
+              right: 'var(--bg-inset, 2px)',
+              bottom: 'var(--bg-inset, 2px)',
+              bg: afterBg,
+              rounded: 'md',
+              zIndex: -1,
+              transition: 'all 200ms ease-in-out',
+              opacity: 0.8,
+            },
+          }
+        },
       },
       defaultProps: {
         variant: 'ghost',
         colorScheme: 'purple',
+      },
+      sizes: {
+        xl: {
+          h: 14,
+          minW: 14,
+          fontSize: 'xl',
+          px: 8,
+        },
+        '2xl': {
+          h: 16,
+          minW: 16,
+          fontSize: '2xl',
+          px: 10,
+          '--bg-inset': '4px',
+        },
       },
     },
     Textarea: {
@@ -72,6 +155,10 @@ const theme = extendTheme({
           height: '100%',
           bg: mode('gray.50', 'gray.800')(props),
           overflowX: 'hidden',
+        },
+        '::selection': {
+          bg: mode('purple.100', 'purple.800')(props),
+          color: mode('purple.900', 'purple.50')(props),
         },
         // Chrome
         '*::-webkit-scrollbar': {

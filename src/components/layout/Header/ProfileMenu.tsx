@@ -8,7 +8,6 @@ import {
   MenuGroup,
   MenuItem,
   MenuList,
-  Text,
 } from '@chakra-ui/react'
 import { Session, signout } from 'next-auth/client'
 import Link from 'next/link'
@@ -27,7 +26,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ user }) => {
         alignItems="center"
         isFullWidth
         variant="subtle"
-        w="150px"
+        // w="70px"
       >
         <HStack display="inline-flex">
           <Avatar
@@ -36,11 +35,11 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ user }) => {
             src={user.image ?? undefined}
             bgGradient="linear(45deg, pink.500, purple.500)"
           />
-          {user.username && (
+          {/* {user.username && (
             <Text as="span" ml={2}>
               {user.username}
             </Text>
-          )}
+          )} */}
         </HStack>
       </MenuButton>
 

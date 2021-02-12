@@ -1,11 +1,12 @@
 import ICell, { CellType, VALID_CELL_TYPES } from '#src/types/Cell'
 import { Box, Button, Flex, Grid, Icon, IconButton, useColorModeValue } from '@chakra-ui/react'
-import { mutate, trigger } from 'swr'
-import axios from 'axios'
+import { mutate } from 'swr'
+import axios, { AxiosError } from 'axios'
 import { useState } from 'react'
 import { FiCode, FiFileText } from 'react-icons/fi'
 import { FaDiceD6 } from 'react-icons/fa'
 import INote from '#src/types/Note'
+import useStyledToast from '#src/hooks/use-styled-toast'
 
 interface AddCellProps {
   noteId: string
@@ -18,9 +19,9 @@ const randomType = () => [...VALID_CELL_TYPES][Math.floor(Math.random() * VALID_
 const AddCell: React.FC<AddCellProps> = ({ prevCellId, noteId, expanded = false }) => {
   const [hovered, setHovered] = useState(false)
   const [loading, setLoading] = useState(false)
+  const toast = useStyledToast()
 
   const handleClick = (type: CellType) => async () => {
-    false && console.log({ type, prevCellId, noteId })
     setLoading(true)
     try {
       const {
@@ -40,8 +41,18 @@ const AddCell: React.FC<AddCellProps> = ({ prevCellId, noteId, expanded = false 
         }
         return { ...data }
       })
-      await trigger(`/api/notes/${noteId}`, true)
+      // await trigger(`/api/notes/${noteId}`, true)
     } catch (err) {
+      if (err.isAxiosError) {
+        const error = err as AxiosError
+        if (error.response?.status === 403) {
+          toast({
+            title: 'Plan limit reached',
+            description: "You've reached your plan's quota. Upgrade to create a new cell.",
+            status: 'error',
+          })
+        }
+      }
       // TODO Handle create cell errors
     } finally {
       setLoading(false)

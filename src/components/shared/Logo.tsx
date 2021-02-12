@@ -1,5 +1,6 @@
 import { Heading, HeadingProps, keyframes, Text } from '@chakra-ui/react'
 import { forwardRef } from 'react'
+import HoverAnimationWrapper from './HoverAnimationWrapper'
 
 type LogoProps = HeadingProps
 
@@ -7,7 +8,6 @@ const headingHover = keyframes`
   from {
     background-position: left;
   }
-
   to {
     background-position: right;
   }
@@ -16,13 +16,13 @@ const headingHover = keyframes`
 const Logo: React.FC<LogoProps> = forwardRef<HTMLHeadingElement, LogoProps>(({ ...rest }, ref) => {
   return (
     <Heading
-      as="a"
+      as={HoverAnimationWrapper}
       userSelect="none"
       bgGradient="linear(45deg, pink.400, purple.400, cyan.300, blue.300, pink.400, purple.400)"
       color="transparent"
       bgClip="text"
       bgSize="600%"
-      _hover={{ animation: `${headingHover} 5500ms linear infinite` }}
+      animation={`${headingHover} 3500ms linear infinite`}
       size="xl"
       ref={ref as any}
       {...rest}

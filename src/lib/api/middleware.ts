@@ -5,21 +5,19 @@ import type { ExtendedApiRequest } from '#src/types/extended-api-types'
 import noop from '#src/utils/noop'
 import HTTPError from './errors'
 import { dbConnect } from '../db'
+import { User } from '../db/models'
 
 type Middleware = IMiddleware<ExtendedApiRequest, NextApiResponse>
 
 export const checkAuth: Middleware = async (req, _res, next) => {
   const session = await getSession({ req })
 
-  console.log(session)
-
   // req.user = session?.user ?? ({ id: '600e824a5ba80e6e94fd17c5' } as any)
 
   req.user = session?.user ?? null
-
-  // while testing
-  if (req.user?.username !== 'mo0th') {
-    req.user = null
+  if (req.user) {
+    const dbUser = await User.findById(req.user.id)
+    req.user.role = dbUser.role
   }
 
   next()

@@ -1,4 +1,5 @@
 import { __dev__ } from '#src/constants'
+import { dbConnect } from '#src/lib/db'
 import { User } from '#src/lib/db/models'
 import { UserDocument } from '#src/types/User'
 import { NextApiHandler } from 'next'
@@ -19,12 +20,12 @@ const options: InitOptions = {
     jwt: true,
   },
   callbacks: {
-    async session(session, user) {
-      // console.log({ session, user })
+    async session(session, user: any) {
       const sessionUser = {
-        ...user,
+        ...session.user,
         id: user.id,
         username: user.username,
+        role: user.role,
       }
 
       return { ...session, user: sessionUser }
@@ -34,11 +35,22 @@ const options: InitOptions = {
 
       if (user?.id) {
         const id = user.id
+        let updated = false
 
+        await dbConnect()
         const dbUser: UserDocument = await User.findById(id)
 
         if (!dbUser.username && profile.login) {
           dbUser.username = profile.login
+          updated = true
+        }
+
+        if (!dbUser.role) {
+          dbUser.role = 'basic'
+          updated = true
+        }
+
+        if (updated) {
           await dbUser.save()
         }
 

@@ -8,6 +8,9 @@ const UserSchema = new mongoose.Schema({
   image: {
     type: String,
   },
+  role: {
+    type: String,
+  },
 })
 
 const existing = mongoose.models['user']

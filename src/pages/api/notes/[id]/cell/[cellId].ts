@@ -1,17 +1,17 @@
 import { nc } from '#src/lib/api'
 import HTTPError from '#src/lib/api/errors'
-import { ensureAuth, ensureDbConnection } from '#src/lib/api/middleware'
+import { ensureAuth } from '#src/lib/api/middleware'
 import { Note } from '#src/lib/db/models'
 import INote from '#src/types/Note'
 import { Document, isValidObjectId } from 'mongoose'
 
 export default nc()
-  .use(ensureAuth, ensureDbConnection)
+  .use(ensureAuth)
   .patch(async (req, res) => {
     const { id: noteId, cellId } = req.query
     const { contents } = req.body
 
-    if (!isValidObjectId(noteId)) {
+    if (typeof noteId !== 'string' || !isValidObjectId(noteId)) {
       throw new HTTPError(406, 'Invalid noteId')
     }
 
@@ -40,7 +40,7 @@ export default nc()
   .delete(async (req, res) => {
     const { id: noteId, cellId } = req.query
 
-    if (!isValidObjectId(noteId)) {
+    if (typeof noteId !== 'string' || !isValidObjectId(noteId)) {
       throw new HTTPError(406, 'Invalid noteId')
     }
 

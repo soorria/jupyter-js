@@ -2,6 +2,7 @@ import { NextApiResponse } from 'next'
 import morgan from 'morgan'
 import nextConnect, { NextConnect } from 'next-connect'
 import { ExtendedApiRequest } from '#src/types/extended-api-types'
+import { ensureDbConnection } from './middleware'
 
 export const nc = (): NextConnect<ExtendedApiRequest, NextApiResponse> =>
   nextConnect<ExtendedApiRequest, NextApiResponse>({
@@ -15,4 +16,4 @@ export const nc = (): NextConnect<ExtendedApiRequest, NextApiResponse> =>
       res.status(err.code || 500)
       res.send(err.message || 'Server Error')
     },
-  }).use(morgan('dev'))
+  }).use(morgan('dev'), ensureDbConnection)

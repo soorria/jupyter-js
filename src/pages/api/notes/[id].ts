@@ -1,12 +1,12 @@
 import { nc } from '#src/lib/api'
 import HTTPError from '#src/lib/api/errors'
-import { ensureAuth, ensureDbConnection } from '#src/lib/api/middleware'
+import { ensureAuth } from '#src/lib/api/middleware'
 import { Note } from '#src/lib/db/models'
 import INote, { NoteDocument } from '#src/types/Note'
 import { isValidObjectId } from 'mongoose'
 
 export default nc()
-  .use(ensureAuth, ensureDbConnection)
+  .use(ensureAuth)
   .use((req, res, next) => {
     if (req.method === 'PATCH') {
       console.log({ req, res })
@@ -28,7 +28,13 @@ export default nc()
   .patch(async (req, res) => {
     const updates: Partial<INote> = req.body
 
-    const note: NoteDocument = await Note.findOne({ _id: req.query.id, owner: req.user!.id })
+    const { id } = req.query
+
+    if (typeof id !== 'string' || !isValidObjectId(id)) {
+      throw new HTTPError(406, 'Invalid noteId')
+    }
+
+    const note: NoteDocument = await Note.findOne({ _id: id, owner: req.user!.id })
 
     if (!note) {
       throw new HTTPError(404)
@@ -81,8 +87,8 @@ export default nc()
   .delete(async (req, res) => {
     const { id } = req.query
 
-    if (!isValidObjectId(id)) {
-      throw new HTTPError(406, 'Invalid note id')
+    if (typeof id !== 'string' || !isValidObjectId(id)) {
+      throw new HTTPError(406, 'Invalid noteId')
     }
 
     const result = await Note.findOneAndDelete({ _id: id, owner: req.user!.id })
