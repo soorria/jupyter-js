@@ -200,6 +200,7 @@ const Resizable: React.FC<ResizableProps> = ({
       minH={minHeight}
       maxH={maxHeight}
       style={{ height: height ? `${height}px` : 'auto' }}
+      userSelect={dragging ? 'none' : 'inherit'}
     >
       <Box
         position="absolute"

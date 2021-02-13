@@ -61,7 +61,7 @@ const CellShell: React.FC<CellShellProps> = ({
   toolbarButtons,
   ...rest
 }) => {
-  const bg = useColorModeValue('gray.100', 'whiteAlpha.50')
+  const bg = useColorModeValue('gray.100', 'gray.700')
 
   return (
     <Box px={4} pb={6} pt={4} bg={bg} rounded="md" {...rest}>
