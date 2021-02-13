@@ -11,6 +11,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Tooltip,
 } from '@chakra-ui/react'
 import type { Editor } from 'codemirror'
 import { format } from 'prettier'
@@ -137,11 +138,13 @@ const CodeCell: React.FC<CodeCellProps> = ({ initialValue, onChange, onMove, onD
             <Button onClick={formatInput} isLoading={formatting}>
               Format
             </Button>
-            <IconButton
-              aria-label="show bundle"
-              icon={<FiBox />}
-              onClick={() => setShowModal(true)}
-            />
+            <Tooltip label="View bundle">
+              <IconButton
+                aria-label="show bundle"
+                icon={<FiBox />}
+                onClick={() => setShowModal(true)}
+              />
+            </Tooltip>
           </>
         }
         onDelete={onDelete}
@@ -169,12 +172,17 @@ const CodeCell: React.FC<CodeCellProps> = ({ initialValue, onChange, onMove, onD
         />
       </CellShell>
 
-      <Modal size="xl" isOpen={showModal} onClose={() => setShowModal(false)}>
+      <Modal
+        scrollBehavior="inside"
+        size="6xl"
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Bundled Code</ModalHeader>
           <ModalCloseButton />
-          <ModalBody as="code">
+          <ModalBody as="code" overflowX="auto">
             <pre>{code}</pre>
           </ModalBody>
         </ModalContent>
