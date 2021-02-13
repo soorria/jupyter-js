@@ -18,7 +18,7 @@ import {
 import { useSession } from 'next-auth/client'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { FiArrowDown } from 'react-icons/fi'
+import { FiArrowDown, FiArrowRight } from 'react-icons/fi'
 import { useInView } from 'react-intersection-observer'
 
 const INITIAL_CODE = `import { useState } from 'react'
@@ -87,8 +87,13 @@ const IndexPage: React.FC = () => {
 
   const getStartedButton = (
     <Link href={session ? '/app/dashboard' : '/login'} passHref>
-      <Button as="a" size="2xl" variant="gradientBorder">
-        Get started for free
+      <Button
+        as="a"
+        size="2xl"
+        variant="gradientBorder"
+        rightIcon={session ? <FiArrowRight /> : <></>}
+      >
+        {session ? 'Go to dashboard' : 'Get started for free'}
       </Button>
     </Link>
   )
