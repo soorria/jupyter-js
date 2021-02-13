@@ -75,6 +75,7 @@ const IndexPage: React.FC = () => {
   const [session] = useSession()
   const [showDemo, setShowDemo] = useState(false)
   const demoBg = useColorModeValue('purple.200', 'purple.800')
+  const arrowColor = useColorModeValue('purple.700', 'purple.300')
   const { ref, inView } = useInView({ triggerOnce: true })
 
   useEffect(() => {
@@ -91,7 +92,7 @@ const IndexPage: React.FC = () => {
         as="a"
         size="2xl"
         variant="gradientBorder"
-        rightIcon={session ? <FiArrowRight /> : <></>}
+        rightIcon={session ? <Icon as={FiArrowRight} /> : <></>}
       >
         {session ? 'Go to dashboard' : 'Get started for free'}
       </Button>
@@ -111,7 +112,7 @@ const IndexPage: React.FC = () => {
             {getStartedButton}
           </Box>
           <Box as="a" href="#demo" animation={`${bounce} 1s infinite`}>
-            <Icon boxSize="2.5rem" as={FiArrowDown} />
+            <Icon boxSize="2.5rem" as={FiArrowDown} color={arrowColor} />
           </Box>
         </Center>
         <Center
