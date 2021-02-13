@@ -88,7 +88,7 @@ const IndexPage: React.FC = () => {
   const getStartedButton = (
     <Link href={session ? '/app/dashboard' : '/login'} passHref>
       <Button as="a" size="2xl" variant="gradientBorder">
-        Get started now!
+        Get started for free
       </Button>
     </Link>
   )
