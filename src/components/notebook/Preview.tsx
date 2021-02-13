@@ -14,7 +14,7 @@ const BASE_HTML = `
       <style>html { background-color: white }</style>
       <script>
         var show = () => {};
-        const handleError = (err) => {
+        var handleError = (err) => {
           document.body.innerHTML = '<h1 style="color: red; font-family: sans-serif">Runtime Error: ' + err.message + '</h1>'
           document.body.innerHTML += '<pre style="color: red; font-family: sans-serif">Runtime Error: ' + err.stack + '</pre>'
           console.error(err)
@@ -22,6 +22,7 @@ const BASE_HTML = `
 
         window.addEventListener('message', (event) => {
           try {
+            document.querySelector('#__script').innerText = event.data
             eval(event.data)
           } catch (err) {
             handleError(err)
@@ -37,6 +38,7 @@ const BASE_HTML = `
     <body>
       <div id="root"></div>
     </body>
+    <div hidden id="__script"></div>
   </html>
 `.trim()
 
@@ -49,7 +51,7 @@ const Preview: React.FC<PreviewProps> = ({ code, loading = false, ...rest }) => 
       iframe.srcdoc = BASE_HTML
       setTimeout(() => {
         iframe.contentWindow?.postMessage(code, '*')
-      }, 50)
+      }, 100)
     }
   }, [code])
 

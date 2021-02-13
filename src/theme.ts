@@ -155,6 +155,7 @@ const theme = extendTheme({
           height: '100%',
           bg: mode('gray.50', 'gray.800')(props),
           overflowX: 'hidden',
+          scrollBehavior: 'smooth',
         },
         '::selection': {
           bg: mode('purple.100', 'purple.800')(props),
