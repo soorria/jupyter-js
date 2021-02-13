@@ -32,7 +32,7 @@ const IndexPage: React.FC = () => {
             <GradientText bgGradient={textGradients[2]}>your browser</GradientText>
           </Heading>
           <Box mx="auto" mt="4rem">
-            <Link href={session ? '/app/dashboard' : 'login'} passHref>
+            <Link href={session ? '/app/dashboard' : '/login'} passHref>
               <Button as="a" size="2xl" variant="gradientBorder">
                 Get started now!
               </Button>

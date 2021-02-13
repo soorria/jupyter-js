@@ -103,7 +103,7 @@ const theme = extendTheme({
               rounded: 'md',
               zIndex: -1,
               transition: 'all 200ms ease-in-out',
-              opacity: 0.8,
+              opacity: 0.7,
             },
           }
         },

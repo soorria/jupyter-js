@@ -65,6 +65,9 @@ const options: InitOptions = {
   jwt: { secret: process.env.JWT_SECRET },
   database: process.env.MONGO_URI,
   debug: __dev__,
+  pages: {
+    signIn: '/login',
+  },
 }
 
 const handler: NextApiHandler = async (req, res) => {
