@@ -72,7 +72,7 @@ const Header: React.FC<HeaderProps> = memo(() => {
   ) : (
     <Link href="/login" passHref>
       <Button variant="subtle" isLoading={sessionLoading}>
-        Sign Up / Sign In
+        Sign In
       </Button>
     </Link>
   )

@@ -28,7 +28,7 @@ const IndexPage: React.FC = () => {
         <Center as="section" my="15vh" flexDirection="column">
           <Heading size="3xl" mx="auto" textAlign="center" maxW="40rem" lineHeight="1">
             <GradientText bgGradient={textGradients[0]}>edit</GradientText> and{' '}
-            <GradientText bgGradient={textGradients[1]}>annotate</GradientText> your code right from{' '}
+            <GradientText bgGradient={textGradients[1]}>annotate</GradientText> code right from{' '}
             <GradientText bgGradient={textGradients[2]}>your browser</GradientText>
           </Heading>
           <Box mx="auto" mt="4rem">
