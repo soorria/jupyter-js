@@ -117,7 +117,6 @@ const IndexPage: React.FC = () => {
         </Center>
         <Center
           position="relative"
-          id="demo"
           minH="100vh"
           bg={demoBg}
           mt="10vh"
@@ -136,7 +135,16 @@ const IndexPage: React.FC = () => {
             h: 'full',
           }}
         >
-          <Stack spacing={8} transform="skewY(5deg)" minH="50%" flex="1" mx={4} py={8} ref={ref}>
+          <Stack
+            id="demo"
+            spacing={8}
+            transform="skewY(5deg)"
+            minH="50%"
+            flex="1"
+            mx={4}
+            py={8}
+            ref={ref}
+          >
             {showDemo ? (
               <>
                 <Heading as="h2">Try it out</Heading>

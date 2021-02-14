@@ -135,9 +135,11 @@ const CodeCell: React.FC<CodeCellProps> = ({ initialValue, onChange, onMove, onD
         }
         toolbarButtons={
           <>
-            <Button onClick={formatInput} isLoading={formatting}>
-              Format
-            </Button>
+            <Tooltip label="Format with prettier">
+              <Button onClick={formatInput} isLoading={formatting}>
+                Format
+              </Button>
+            </Tooltip>
             <Tooltip label="View bundle">
               <IconButton
                 aria-label="show bundle"
