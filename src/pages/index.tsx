@@ -1,3 +1,4 @@
+import FeaturesList from '#src/components/landing/FeaturesList'
 import MainLayout from '#src/components/layout/MainLayout'
 import CodeCell from '#src/components/notebook/CodeCell'
 import MarkdownCell from '#src/components/notebook/MarkdownCell'
@@ -13,6 +14,7 @@ import {
   keyframes,
   Stack,
   Text,
+  useBreakpointValue,
   useColorModeValue,
 } from '@chakra-ui/react'
 import { useSession } from 'next-auth/client'
@@ -77,6 +79,7 @@ const IndexPage: React.FC = () => {
   const demoBg = useColorModeValue('purple.200', 'purple.800')
   const arrowColor = useColorModeValue('purple.700', 'purple.300')
   const { ref, inView } = useInView({ triggerOnce: true })
+  const btnSize = useBreakpointValue({ base: 'xl', sm: '2xl' })
 
   useEffect(() => {
     if (inView) {
@@ -90,9 +93,9 @@ const IndexPage: React.FC = () => {
     <Link href={session ? '/app/dashboard' : '/login'} passHref>
       <Button
         as="a"
-        size="2xl"
+        size={btnSize}
         variant="gradientBorder"
-        rightIcon={session ? <Icon as={FiArrowRight} /> : <></>}
+        rightIcon={session ? <Icon as={FiArrowRight} /> : undefined}
       >
         {session ? 'Go to dashboard' : 'Get started for free'}
       </Button>
@@ -173,6 +176,7 @@ const IndexPage: React.FC = () => {
             )}
           </Stack>
         </Center>
+        <FeaturesList />
         <Center mt="2rem" mb="12rem">
           {getStartedButton}
         </Center>

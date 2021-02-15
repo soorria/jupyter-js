@@ -140,6 +140,11 @@ const theme = extendTheme({
         },
       },
     },
+    Code: {
+      baseStyle: {
+        fontSize: '1em',
+      },
+    },
   },
   fonts: {
     heading: `'Poppins', ${defaultTheme.fonts.heading}`,
