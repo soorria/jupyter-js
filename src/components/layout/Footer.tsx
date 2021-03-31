@@ -1,6 +1,7 @@
 import {
   Box,
   Icon,
+  Image,
   keyframes,
   Link,
   Spacer,
@@ -11,7 +12,7 @@ import {
   useToken,
 } from '@chakra-ui/react'
 import { memo, useEffect, useState } from 'react'
-import { FiCode, FiGithub, FiGlobe, FiHeart } from 'react-icons/fi'
+import { FiCode, FiGithub, FiHeart } from 'react-icons/fi'
 
 const COLORS = [
   'red.500',
@@ -88,8 +89,8 @@ const Footer: React.FC<FooterProps> = memo(() => {
             transition="all 150ms ease-in-out"
             _hover={{
               filter: `drop-shadow(0 0 7px ${heartColor})`,
-              animation: `${heartPulse} 2.5s infinite`,
             }}
+            animation={`${heartPulse} 2.5s infinite`}
             fill={heartColor}
             stroke={heartColor}
             as={FiHeart}
@@ -108,8 +109,16 @@ const Footer: React.FC<FooterProps> = memo(() => {
           divider={<StackDivider />}
           justify="center"
         >
-          <Link isExternal href="https://mooth.tech">
-            <Icon mr={2} as={FiGlobe} />
+          <Link isExternal href="https://mooth.tech" role="group">
+            <Image
+              src="https://mooth.tech/logo.svg"
+              w={4}
+              h={4}
+              display="inline-block"
+              mr={2}
+              transition="all 150ms ease-in-out"
+              _groupHover={{ transform: 'rotate(180deg)' }}
+            />
             mooth.tech
           </Link>
           <Link isExternal href="https://github.com/mo0th">

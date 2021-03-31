@@ -1,4 +1,4 @@
-import { NOTE_LIMITS } from '#src/constants'
+import { NOTE_LIMITS } from '#src/config'
 import { nc } from '#src/lib/api'
 import HTTPError from '#src/lib/api/errors'
 import { ensureAuth } from '#src/lib/api/middleware'
@@ -16,6 +16,7 @@ const handler = nc()
     res.json({ notes })
   })
   .post(async (req, res) => {
+    // Artificial Delay
     await sleep(1000)
     const uid = req.user!.id
 

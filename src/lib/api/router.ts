@@ -12,6 +12,7 @@ export const nc = (): NextConnect<ExtendedApiRequest, NextApiResponse> =>
       res.end()
     },
     onError: (err, _req, res) => {
+      console.log(err.stack)
       console.log(err)
       res.status(err.code || 500)
       res.send(err.message || 'Server Error')

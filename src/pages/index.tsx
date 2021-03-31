@@ -1,9 +1,11 @@
 import FeaturesList from '#src/components/landing/FeaturesList'
+import Pricing from '#src/components/landing/Pricing'
 import MainLayout from '#src/components/layout/MainLayout'
 import CodeCell from '#src/components/notebook/CodeCell'
 import MarkdownCell from '#src/components/notebook/MarkdownCell'
 import GradientText from '#src/components/shared/GradientText'
 import Loader from '#src/components/shared/Loader'
+import { __prod__ } from '#src/constants'
 import noop from '#src/utils/noop'
 import {
   Box,
@@ -23,6 +25,8 @@ import { useEffect, useState } from 'react'
 import { FiArrowDown, FiArrowRight } from 'react-icons/fi'
 import { useInView } from 'react-intersection-observer'
 
+const DEV_SHOW_DEMO = __prod__ || true
+
 const INITIAL_CODE = `import { useState } from 'react'
 import 'bulma/css/bulma.css'
 
@@ -37,7 +41,7 @@ const App = () => {
   )
 }
 
-show(<App />)
+show(<App asd={asd} />)
 `
 
 const INITIAL_MARKDOWN = `# Double-Click to Edit
@@ -106,7 +110,15 @@ const IndexPage: React.FC = () => {
     <MainLayout>
       <Box>
         <Center as="section" h="80vh" py="13vh" flexDirection="column">
-          <Heading as="h1" size="3xl" mx="auto" textAlign="center" maxW="40rem" lineHeight="1">
+          <Heading
+            as="h1"
+            size="3xl"
+            mx="auto"
+            textAlign="center"
+            maxW="40rem"
+            lineHeight="1"
+            px={4}
+          >
             <GradientText bgGradient={textGradients[0]}>edit</GradientText> and{' '}
             <GradientText bgGradient={textGradients[1]}>annotate</GradientText> code right from{' '}
             <GradientText bgGradient={textGradients[2]}>your browser</GradientText>
@@ -148,7 +160,7 @@ const IndexPage: React.FC = () => {
             py={8}
             ref={ref}
           >
-            {showDemo ? (
+            {showDemo && DEV_SHOW_DEMO ? (
               <>
                 <Heading as="h2">Try it out</Heading>
                 <CodeCell
@@ -177,6 +189,7 @@ const IndexPage: React.FC = () => {
           </Stack>
         </Center>
         <FeaturesList />
+        <Pricing />
         <Center mt="2rem" mb="12rem">
           {getStartedButton}
         </Center>

@@ -12,9 +12,14 @@ const BASE_HTML = `
   <html>
     <head>
       <style>html { background-color: white }</style>
+    </head>
+    <body>
+      <div id="root"></div>
       <script>
         var show = () => {};
         var handleError = (err) => {
+          console.dir(document)
+          console.dir(document.body)
           document.body.innerHTML = '<h1 style="color: red; font-family: sans-serif">Runtime Error: ' + err.message + '</h1>'
           document.body.innerHTML += '<pre style="color: red; font-family: sans-serif">Runtime Error: ' + err.stack + '</pre>'
           console.error(err)
@@ -34,9 +39,6 @@ const BASE_HTML = `
           handleError(event.error)
         })
       </script>
-    </head>
-    <body>
-      <div id="root"></div>
     </body>
     <div hidden id="__script"></div>
   </html>

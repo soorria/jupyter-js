@@ -7,7 +7,7 @@ import ICell, { VALID_CELL_TYPES } from '#src/types/Cell'
 import INote from '#src/types/Note'
 import { nanoid } from 'nanoid'
 import { getNumCellsByUser } from '#src/lib/db/aggregates'
-import { CELL_LIMITS } from '#src/constants'
+import { CELL_LIMITS } from '#src/config'
 
 export default nc()
   .use(ensureAuth)

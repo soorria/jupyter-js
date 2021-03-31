@@ -26,20 +26,14 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ user }) => {
         alignItems="center"
         isFullWidth
         variant="subtle"
-        // w="70px"
       >
-        <HStack display="inline-flex">
+        <HStack>
           <Avatar
             size="xs"
             name={user.name || 'No Name'}
             src={user.image ?? undefined}
             bgGradient="linear(45deg, pink.500, purple.500)"
           />
-          {/* {user.username && (
-            <Text as="span" ml={2}>
-              {user.username}
-            </Text>
-          )} */}
         </HStack>
       </MenuButton>
 
