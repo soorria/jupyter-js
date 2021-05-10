@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { Box, Button, Heading, HStack, Stack, Text } from '@chakra-ui/react'
 import axios from 'axios'
 import { useState } from 'react'

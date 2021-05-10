@@ -1,5 +1,4 @@
 import NotesTab from '#src/components/dashboard/NotesTab'
-import ProfileTab from '#src/components/dashboard/ProfileTab'
 import BillingTab from '#src/components/dashboard/BillingTab'
 import UsageTab from '#src/components/dashboard/UsageTab'
 import AuthedLayout from '#src/components/layout/AuthedLayout'
