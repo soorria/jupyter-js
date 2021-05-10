@@ -41,7 +41,7 @@ const App = () => {
   )
 }
 
-show(<App asd={asd} />)
+show(<App />)
 `
 
 const INITIAL_MARKDOWN = `# Double-Click to Edit

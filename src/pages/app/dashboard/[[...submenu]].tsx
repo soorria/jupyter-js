@@ -1,6 +1,6 @@
 import NotesTab from '#src/components/dashboard/NotesTab'
 import ProfileTab from '#src/components/dashboard/ProfileTab'
-import SettingsTab from '#src/components/dashboard/SettingsTab'
+import BillingTab from '#src/components/dashboard/BillingTab'
 import UsageTab from '#src/components/dashboard/UsageTab'
 import AuthedLayout from '#src/components/layout/AuthedLayout'
 import MotionBox from '#src/components/shared/MotionBox'
@@ -31,7 +31,7 @@ const URL_TO_TAB_INDEX: Record<string, number> = {
   '': 0,
   notes: 0,
   usage: 1,
-  settings: 2,
+  billing: 2,
 }
 
 const useSelectedTabColor = () => useColorModeValue('purple.600', 'purple.300')
@@ -58,7 +58,6 @@ const TabIndicator: React.FC<{ tabFor: string; selectedTab: string }> = ({
 
 const Notes: React.FC<NotesProps> = ({ initialIndex, initialSelected }) => {
   const router = useRouter()
-  // const { submenu = [] } = router.query
   const [selected, setSelected] = useState(initialSelected)
   const [index, setIndex] = useState(initialIndex || 0)
   const selectedColor = useSelectedTabColor()
@@ -109,9 +108,9 @@ const Notes: React.FC<NotesProps> = ({ initialIndex, initialSelected }) => {
                 Usage
                 <TabIndicator tabFor="usage" selectedTab={selected} />
               </Tab>
-              <Tab {...tabProps} onClick={() => setTab('settings')}>
-                Settings
-                <TabIndicator tabFor="settings" selectedTab={selected} />
+              <Tab {...tabProps} onClick={() => setTab('billing')}>
+                Billing
+                <TabIndicator tabFor="billing" selectedTab={selected} />
               </Tab>
             </TabList>
           </AnimateSharedLayout>
@@ -123,10 +122,7 @@ const Notes: React.FC<NotesProps> = ({ initialIndex, initialSelected }) => {
               <UsageTab />
             </TabPanel>
             <TabPanel>
-              <ProfileTab />
-            </TabPanel>
-            <TabPanel>
-              <SettingsTab />
+              <BillingTab />
             </TabPanel>
           </TabPanels>
         </Tabs>

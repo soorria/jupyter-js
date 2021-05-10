@@ -11,6 +11,9 @@ const UserSchema = new mongoose.Schema({
   role: {
     type: String,
   },
+  stripeId: {
+    type: String,
+  },
 })
 
 const existing = mongoose.models['user']

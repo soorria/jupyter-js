@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { CELL_LIMITS, NOTE_LIMITS } from '#src/config'
 import fetcher from '#src/lib/fetcher'
 import { UserRole } from '#src/types/User'
@@ -9,6 +10,7 @@ import {
   Spacer,
   Stack,
   Text,
+  Link as ChakraLink,
   useColorModeValue,
 } from '@chakra-ui/react'
 import useSWR from 'swr'
@@ -99,9 +101,15 @@ const UsageTab: React.FC<UsageTabProps> = () => {
       <HStack spacing={4} mt={16} justify="center">
         <Text>Need more space?</Text>
         {data?.role === 'basic' ? (
-          <Button variant="gradientBorder">Upgrade</Button>
+          <Link href="/app/dashboard/billing" passHref>
+            <Button as="a" variant="gradientBorder">
+              Upgrade
+            </Button>
+          </Link>
         ) : (
-          <Button variant="gradientBorder">Contact Me</Button>
+          <Button as={ChakraLink} variant="gradientBorder" href="https://mooth.tech/#contact">
+            Contact Me
+          </Button>
         )}
       </HStack>
     </Box>

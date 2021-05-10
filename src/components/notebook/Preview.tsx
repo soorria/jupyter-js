@@ -15,6 +15,7 @@ const BASE_HTML = `
     </head>
     <body>
       <div id="root"></div>
+      <div hidden id="__script"></div>
       <script>
         var show = () => {};
         var handleError = (err) => {
@@ -40,7 +41,6 @@ const BASE_HTML = `
         })
       </script>
     </body>
-    <div hidden id="__script"></div>
   </html>
 `.trim()
 

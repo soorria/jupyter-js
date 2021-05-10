@@ -28,7 +28,7 @@ const CodeMirrorWrapper = styled(CodeMirror)`
 
   .CodeMirror {
     height: 100%;
-    font-size: 1.25rem;
+    font-size: 1rem;
   }
 
   .CodeMirror-wrap pre.CodeMirror-line,

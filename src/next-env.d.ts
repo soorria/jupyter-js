@@ -11,5 +11,11 @@ declare namespace NodeJS {
     GITHUB_CLIENT_SECRET: string
     MONGO_URI: string
     NEXTAUTH_URL: string
+    SESSION_SECRET: string
+    JWT_SECRET: string
+    NEXT_PUBLIC_STRIPE_PUBLIC_KEY: string
+    STRIPE_PRIVATE_KEY: string
+    STRIPE_WEBHOOK_SECRET: string
+    PREMIUM_PRICE_ID: string
   }
 }

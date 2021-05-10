@@ -9,6 +9,7 @@ interface IUser {
   username?: string
   image?: string
   email?: string
+  stripeId?: string
 }
 
 export type UserDocument = IUser & Document<string>

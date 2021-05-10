@@ -7,12 +7,6 @@ import { isValidObjectId } from 'mongoose'
 
 export default nc()
   .use(ensureAuth)
-  .use((req, res, next) => {
-    if (req.method === 'PATCH') {
-      console.log({ req, res })
-    }
-    next()
-  })
   .get(async (req, res) => {
     const id = req.query.id as string
 
