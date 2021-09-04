@@ -11,6 +11,7 @@ const App = ({ Component, pageProps }: AppProps): React.ReactNode => {
     <>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script async defer data-domain="jjs.mooth.tech" src="https://plausible.mooth.tech/js/plausible.js" />
       </Head>
       <ChakraProvider theme={theme}>
         <Provider session={pageProps.session}>
