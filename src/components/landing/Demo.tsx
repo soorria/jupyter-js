@@ -6,6 +6,16 @@ import { Heading } from '@chakra-ui/layout'
 const INITIAL_CODE = `import { useState } from 'react'
 import 'bulma/css/bulma.css'
 
+jjs.css\`
+.content {
+  display: flex;
+}
+
+.content > * + * {
+  margin-left: 1rem;
+}
+\`
+
 const App = () => {
   const [count, setCount] = useState(0)
   
@@ -17,7 +27,7 @@ const App = () => {
   )
 }
 
-show(<App />)
+jjs.show(<App />)
 `
 
 const INITIAL_MARKDOWN = `# Double-Click to Edit

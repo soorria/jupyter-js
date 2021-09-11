@@ -35,7 +35,7 @@ const helperCode = `
 import { createElement as __esbuild_createElement, Fragment as __esbuild_Fragment } from 'react'
 import { render as __esbuild_render } from 'react-dom'
 
-let __react_render_count__ = 0
+let __el_count__ = 0
 
 const show = (...args) => {
   const root = document.querySelector('#root')
@@ -46,7 +46,7 @@ const show = (...args) => {
     if (typeof arg === 'object') {
       if (arg.$$typeof && arg.props) {
         const reactRoot = document.createElement('div')
-        reactRoot.id = 'react-root-' + (++__react_render_count__)
+        reactRoot.id = 'jupyter-el-' + (++__el_count__)
         root.appendChild(reactRoot)
         __esbuild_render(arg, reactRoot)
       } else if (Array.isArray(arg)) {
@@ -61,6 +61,31 @@ const show = (...args) => {
 
   args.forEach(arg => _show(arg))
 }
+
+const css = (literals, ...args) => {
+  if (typeof literals === 'string') {
+    literals = [literals]
+  }
+
+  let styleText = literals[0]
+
+  args.forEach((arg, i) => {
+    styleText += arg.toString() + literals[i + 1]
+  })
+
+  const styleElement = document.createElement('style')
+  styleElement.innerText = styleText
+  styleElement.id = 'jupyter-el-' + (++__el_count__)
+
+  const add = () => document.head.appendChild(styleElement)
+  const remove = () => document.head.removeChild(styleElement)
+
+  add()
+
+  return {add, remove}
+}
+
+window.jjs = { show, css }
 `
 
 const CodeCell: React.FC<CodeCellProps> = ({ initialValue, onChange, onMove, onDelete }) => {
@@ -86,7 +111,7 @@ const CodeCell: React.FC<CodeCellProps> = ({ initialValue, onChange, onMove, onD
       const result = await bundle(helperCode + input)
       bundledCode = result.code
       setCode(bundledCode)
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message)
     } finally {
       setLoading(false)

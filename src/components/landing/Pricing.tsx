@@ -8,13 +8,13 @@ const FeaturesList: React.FC = () => {
   const proPriceColor = useColorModeValue('purple.800', 'purple.200')
 
   return (
-    <Box as="section" bg={sectionBg} my={24}>
+    <Box as="section" bg={sectionBg} my={32}>
       <SimpleGrid columns={{ base: 1, md: 2 }} px={4} maxW="40rem" mx="auto">
         <Heading as="h2" py={12}>
           Pricing
         </Heading>
 
-        <Stack p={4} bg={proBg} my={-8} rounded="md">
+        <Stack p={8} bg={proBg} my={-8} rounded="md">
           <Box pb={4}>
             <Heading as="h3">Pro</Heading>
             <Text color={proPriceColor}>$10 / month</Text>
