@@ -1,5 +1,3 @@
-/* eslint-disable react/display-name */
-/* eslint-disable react-hooks/rules-of-hooks */
 import { Box, Center } from '@chakra-ui/react'
 import MarkdownRenderer from '../shared/MarkdownRenderer'
 
