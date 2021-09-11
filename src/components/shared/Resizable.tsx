@@ -8,6 +8,7 @@ interface ResizableProps {
   maxWidth?: BoxProps['maxWidth']
   minHeight?: BoxProps['minHeight']
   maxHeight?: BoxProps['maxHeight']
+  startHeight?: number
   defaultRatio?: number
   left: ReactNode
   right: ReactNode
@@ -67,12 +68,13 @@ const Resizable: React.FC<ResizableProps> = ({
   maxWidth,
   minHeight,
   maxHeight,
+  startHeight = 0,
   defaultRatio = 0.5,
   left,
   right,
 }) => {
   const [width, setWidth] = useState(0)
-  const [height, setHeight] = useState(0)
+  const [height, setHeight] = useState(startHeight)
   const leftRef = useRef<HTMLDivElement>()
   const containerRef = useRef<HTMLDivElement>()
   const EWRef = useRef<HTMLDivElement>(null)
@@ -86,7 +88,11 @@ const Resizable: React.FC<ResizableProps> = ({
     if (containerRef.current && !width) {
       const ratio = defaultRatio > 1 ? 1 : defaultRatio < 0 ? 0 : defaultRatio
       setWidth(containerRef.current.clientWidth * Math.max(Math.min(ratio, 1), 0))
-      setHeight(containerRef.current.clientHeight)
+      setHeight(
+        height => (
+          console.log({ height }), height ? height : containerRef.current?.clientHeight ?? 100
+        )
+      )
     }
   }, [])
 
@@ -120,7 +126,6 @@ const Resizable: React.FC<ResizableProps> = ({
 
         setWidth(touch.pageX - leftRef.current!.getBoundingClientRect().x)
       }
-      console.log(2)
     }
 
     const handleDragEnd = () => {
@@ -135,7 +140,6 @@ const Resizable: React.FC<ResizableProps> = ({
       touchIdRef.current = getTouchId(e)
     }
     setEWDragging(true)
-    console.log(1)
   }, [])
 
   // East-West Dragging

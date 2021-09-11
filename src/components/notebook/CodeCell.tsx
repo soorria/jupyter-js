@@ -29,6 +29,7 @@ interface CodeCellProps {
   onDelete?: () => any
   onMove?: (direction: 'UP' | 'DOWN') => any
   cellId: string
+  startHeight?: number
 }
 
 const helperCode = `
@@ -88,7 +89,13 @@ const css = (literals, ...args) => {
 window.jjs = { show, css }
 `
 
-const CodeCell: React.FC<CodeCellProps> = ({ initialValue, onChange, onMove, onDelete }) => {
+const CodeCell: React.FC<CodeCellProps> = ({
+  initialValue,
+  onChange,
+  onMove,
+  onDelete,
+  startHeight,
+}) => {
   const [input, setInput] = useState(initialValue)
   const [code, setCode] = useState('')
   const [, setError] = useState('')
@@ -181,6 +188,7 @@ const CodeCell: React.FC<CodeCellProps> = ({ initialValue, onChange, onMove, onD
           minWidth="100px"
           minHeight="25vh"
           maxHeight="90vh"
+          startHeight={startHeight}
           left={
             <Flex direction="column" h="100%">
               {mounted ? (

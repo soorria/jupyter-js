@@ -49,6 +49,7 @@ const Demo: React.FC = () => {
         onChange={noop}
         onMove={noop}
         cellId="demo"
+        startHeight={500}
       />
       <MarkdownCell
         initialValue={INITIAL_MARKDOWN}

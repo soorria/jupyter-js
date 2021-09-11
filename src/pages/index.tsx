@@ -23,6 +23,7 @@ import MainLayout from '#src/components/layout/MainLayout'
 import GradientText from '#src/components/shared/GradientText'
 import Loader from '#src/components/shared/Loader'
 import { __prod__ } from '#src/constants'
+import { useRouter } from 'next/router'
 
 const DemoLoadingFallback = () => (
   <Center h="100%" flexDirection="column">
@@ -70,6 +71,12 @@ const IndexPage: React.FC = () => {
   const arrowColor = useColorModeValue('purple.700', 'purple.300')
   const { ref, inView } = useInView({ triggerOnce: true })
   const btnSize = useBreakpointValue({ base: 'xl', sm: '2xl' })
+
+  const { prefetch } = useRouter()
+
+  useEffect(() => {
+    prefetch('/app/note/[id]/asdkfasd').then(() => console.log('preloaded'))
+  }, [prefetch])
 
   useEffect(() => {
     if (inView) {
