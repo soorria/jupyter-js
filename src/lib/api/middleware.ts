@@ -14,7 +14,7 @@ export const checkAuth: Middleware = async (req, _res, next) => {
 
   // req.user = session?.user ?? ({ id: '600e824a5ba80e6e94fd17c5' } as any)
 
-  req.user = session?.user ?? null
+  req.user = (session?.user as any) ?? null
   if (req.user) {
     const dbUser = await User.findById(req.user.id)
     req.user.role = dbUser.role

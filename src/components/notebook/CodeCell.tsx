@@ -89,6 +89,10 @@ const css = (literals, ...args) => {
 window.jjs = { show, css }
 `
 
+const formatMs = (ms: number) => {
+  return Math.round(ms).toString()
+}
+
 const CodeCell: React.FC<CodeCellProps> = ({
   initialValue,
   onChange,
@@ -98,6 +102,7 @@ const CodeCell: React.FC<CodeCellProps> = ({
 }) => {
   const [input, setInput] = useState(initialValue)
   const [code, setCode] = useState('')
+  const [time, setTime] = useState<number | null>(null)
   const [, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [formatting, setFormatting] = useState(false)
@@ -108,20 +113,17 @@ const CodeCell: React.FC<CodeCellProps> = ({
 
   const bundleInput = useDebounce(async () => {
     try {
-      // eslint-disable-next-line prefer-const
-      let bundledCode: string
-      setTimeout(() => {
-        if (!bundledCode) {
-          setLoading(true)
-        }
-      }, 500)
+      setLoading(true)
       const result = await bundle(helperCode + input)
-      bundledCode = result.code
-      setCode(bundledCode)
+      setTime(result.time ?? null)
+      setCode(curr => {
+        if (curr === result.code) {
+          setLoading(false)
+        }
+        return result.code
+      })
     } catch (err: any) {
       setError(err.message)
-    } finally {
-      setLoading(false)
     }
   }, 750)
 
@@ -129,7 +131,7 @@ const CodeCell: React.FC<CodeCellProps> = ({
     setFormatting(true)
     try {
       const formatted = format(input, {
-        semi: true,
+        semi: false,
         singleQuote: true,
         useTabs: false,
         parser: 'babel',
@@ -165,6 +167,7 @@ const CodeCell: React.FC<CodeCellProps> = ({
             <Icon as={FiCode} mr={2} /> Code Cell
           </>
         }
+        info={time !== null ? <span>Done in {formatMs(time)}ms</span> : null}
         toolbarButtons={
           <>
             <Tooltip label="Format with prettier">
@@ -196,13 +199,15 @@ const CodeCell: React.FC<CodeCellProps> = ({
                   mode="jsx"
                   initialValue={input}
                   onChange={handleChange}
-                  onEditorDidMount={editorInstance => (editor.current = editorInstance)}
+                  onEditorDidMount={editorInstance => {
+                    editor.current = editorInstance
+                  }}
                 />
               ) : null}
             </Flex>
           }
           right={
-            <Preview loading={loading} code={code} gridRow="1 / 3" gridColumn="2" height="100%" />
+            <Preview loading={loading} onDone={() => setLoading(false)} code={code} height="100%" />
           }
         />
       </CellShell>

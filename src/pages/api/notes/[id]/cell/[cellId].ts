@@ -2,8 +2,7 @@ import { nc } from '#src/lib/api'
 import HTTPError from '#src/lib/api/errors'
 import { ensureAuth } from '#src/lib/api/middleware'
 import { Note } from '#src/lib/db/models'
-import INote from '#src/types/Note'
-import { Document, isValidObjectId } from 'mongoose'
+import { isValidObjectId } from 'mongoose'
 
 export default nc()
   .use(ensureAuth)
@@ -20,7 +19,7 @@ export default nc()
       throw new HTTPError(406, 'Invalid contents')
     }
 
-    const note: INote & Document = await Note.findOne({ _id: noteId, owner: req.user!.id })
+    const note = await Note.findOne({ _id: noteId, owner: req.user!.id })
 
     if (!note) {
       throw new HTTPError(404)
@@ -44,7 +43,7 @@ export default nc()
       throw new HTTPError(406, 'Invalid noteId')
     }
 
-    const note: INote & Document = await Note.findOne({ _id: noteId, owner: req.user!.id })
+    const note = await Note.findOne({ _id: noteId, owner: req.user!.id })
 
     if (!note) {
       throw new HTTPError(404)

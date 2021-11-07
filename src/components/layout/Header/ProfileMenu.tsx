@@ -9,7 +9,8 @@ import {
   MenuItem,
   MenuList,
 } from '@chakra-ui/react'
-import { Session, signout } from 'next-auth/client'
+import type { Session } from 'next-auth'
+import { signout } from 'next-auth/client'
 import Link from 'next/link'
 import { FiActivity, FiChevronDown, FiLogOut, FiSettings, FiUser } from 'react-icons/fi'
 
@@ -30,8 +31,8 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ user }) => {
         <HStack>
           <Avatar
             size="xs"
-            name={user.name || 'No Name'}
-            src={user.image ?? undefined}
+            name={user?.name || 'No Name'}
+            src={user?.image ?? undefined}
             bgGradient="linear(45deg, pink.500, purple.500)"
           />
         </HStack>

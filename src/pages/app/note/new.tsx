@@ -25,7 +25,7 @@ const NewNote: React.FC<newProps> = () => {
         const response = await axios.post<{ note: INote }>('/api/notes')
         router.push(`/app/note/${response.data.note._id}`)
       } catch (err) {
-        if (err.isAxiosError) {
+        if ((err as any).isAxiosError) {
           const error = err as AxiosError
           const status = error.response?.status
 

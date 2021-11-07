@@ -18,6 +18,7 @@ import { FiChevronDown, FiChevronUp, FiMoreHorizontal, FiTrash2, FiX } from 'rea
 
 type CellShellProps = Omit<BoxProps, 'title'> & {
   title?: React.ReactNode
+  info?: React.ReactNode
   toolbarButtons?: React.ReactNode
   onDelete?: () => any
   onMove?: (direction: 'UP' | 'DOWN') => any
@@ -58,6 +59,7 @@ const CellShell: React.FC<CellShellProps> = ({
   title,
   onDelete,
   onMove,
+  info,
   toolbarButtons,
   ...rest
 }) => {
@@ -70,6 +72,7 @@ const CellShell: React.FC<CellShellProps> = ({
           {title}
         </Heading>
         <Spacer />
+        <Box>{info}</Box>
         <Toolbar>
           {toolbarButtons}
           <IconButton

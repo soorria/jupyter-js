@@ -88,11 +88,7 @@ const Resizable: React.FC<ResizableProps> = ({
     if (containerRef.current && !width) {
       const ratio = defaultRatio > 1 ? 1 : defaultRatio < 0 ? 0 : defaultRatio
       setWidth(containerRef.current.clientWidth * Math.max(Math.min(ratio, 1), 0))
-      setHeight(
-        height => (
-          console.log({ height }), height ? height : containerRef.current?.clientHeight ?? 100
-        )
-      )
+      setHeight(height => (height ? height : containerRef.current?.clientHeight ?? 100))
     }
   }, [])
 

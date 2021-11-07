@@ -5,6 +5,7 @@ import Loader from '../shared/Loader'
 type PreviewProps = {
   code: string
   loading?: boolean
+  onDone: () => any
 } & BoxProps
 
 const BASE_HTML = `
@@ -29,7 +30,9 @@ const BASE_HTML = `
         window.addEventListener('message', (event) => {
           try {
             document.querySelector('#__script').innerText = event.data
+            console.log('got new data')
             eval(event.data)
+            window.parent.postMessage('done', '*')
           } catch (err) {
             handleError(err)
           }
@@ -39,21 +42,39 @@ const BASE_HTML = `
           event.preventDefault()
           handleError(event.error)
         })
+
+        window.parent.postMessage('ready', '*')
       </script>
     </body>
   </html>
 `.trim()
 
-const Preview: React.FC<PreviewProps> = ({ code, loading = false, ...rest }) => {
-  const iframeRef = useRef<HTMLIFrameElement>()
+const Preview: React.FC<PreviewProps> = ({ code, loading = false, onDone, ...rest }) => {
+  const iframeRef = useRef<HTMLIFrameElement | null>(null)
+  const onDoneRef = useRef<() => any | undefined>(onDone)
+
+  useEffect(() => {
+    if (onDone) onDoneRef.current = onDone
+  }, [onDone])
 
   useEffect(() => {
     if (iframeRef.current) {
       const iframe = iframeRef.current
       iframe.srcdoc = BASE_HTML
-      setTimeout(() => {
-        iframe.contentWindow?.postMessage(code, '*')
-      }, 100)
+      const messageHandler = (event: MessageEvent) => {
+        if (event.data === 'ready') {
+          iframe.contentWindow?.postMessage(code, '*')
+        } else if (event.data === 'done') {
+          onDoneRef.current?.()
+          window.removeEventListener('message', messageHandler)
+        }
+      }
+
+      window.addEventListener('message', messageHandler)
+
+      return () => {
+        window.removeEventListener('message', messageHandler)
+      }
     }
   }, [code])
 
@@ -61,8 +82,8 @@ const Preview: React.FC<PreviewProps> = ({ code, loading = false, ...rest }) => 
     <Box position="relative" w="100%" h="100%" {...rest}>
       <Box
         as="iframe"
-        ref={iframeRef as any}
-        sandbox="allow-scripts"
+        ref={iframeRef}
+        sandbox="allow-scripts allow-same-origin"
         title="preview"
         w="100%"
         h="100%"

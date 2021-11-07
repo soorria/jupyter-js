@@ -53,24 +53,27 @@ const NotePage: React.FC<NotePageProps> = () => {
 
   useEffect(() => {
     if (blockLeave) {
-      console.log('blocking')
       const handler = (e: BeforeUnloadEvent) => {
         e.returnValue = 'You may have unsaved changes.'
         return 'You may have unsaved changes.'
       }
       window.addEventListener('beforeunload', handler)
       return () => {
-        console.log('not blocking')
         window.removeEventListener('beforeunload', handler)
       }
     }
   }, [blockLeave])
 
-  const { data: note, error, isValidating, revalidate, mutate } = useSWR<INote>(
-    id ? `/api/notes/${id}` : null,
-    url => fetcher(url).then(res => res.note),
-    { errorRetryCount: 0, focusThrottleInterval: 10000 }
-  )
+  const {
+    data: note,
+    error,
+    isValidating,
+    revalidate,
+    mutate,
+  } = useSWR<INote>(id ? `/api/notes/${id}` : null, url => fetcher(url).then(res => res.note), {
+    errorRetryCount: 0,
+    focusThrottleInterval: 10000,
+  })
 
   const mounted = useMounted()
   const loading = !note && !error

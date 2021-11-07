@@ -2,7 +2,7 @@ import { nc } from '#src/lib/api'
 import HTTPError from '#src/lib/api/errors'
 import { ensureAuth } from '#src/lib/api/middleware'
 import { Note } from '#src/lib/db/models'
-import INote, { NoteDocument } from '#src/types/Note'
+import INote from '#src/types/Note'
 import { isValidObjectId } from 'mongoose'
 
 export default nc()
@@ -28,7 +28,7 @@ export default nc()
       throw new HTTPError(406, 'Invalid noteId')
     }
 
-    const note: NoteDocument = await Note.findOne({ _id: id, owner: req.user!.id })
+    const note = await Note.findOne({ _id: id, owner: req.user!.id })
 
     if (!note) {
       throw new HTTPError(404)

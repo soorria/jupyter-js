@@ -3,13 +3,13 @@ import { dbConnect } from '#src/lib/db'
 import { User } from '#src/lib/db/models'
 import { UserDocument } from '#src/types/User'
 import { NextApiHandler } from 'next'
-import NextAuth, { InitOptions } from 'next-auth'
+import NextAuth, { NextAuthOptions } from 'next-auth'
 
 import Providers from 'next-auth/providers'
 
 const url = process.env.NEXTAUTH_URL
 
-const options: InitOptions = {
+const options: NextAuthOptions = {
   providers: [
     Providers.GitHub({
       clientId: process.env.GITHUB_CLIENT_ID,
@@ -41,7 +41,7 @@ const options: InitOptions = {
         await dbConnect()
         const dbUser: UserDocument = await User.findById(id)
 
-        if (!dbUser.username && profile.login) {
+        if (!dbUser.username && typeof profile?.login === 'string') {
           dbUser.username = profile.login
           updated = true
         }
@@ -55,7 +55,7 @@ const options: InitOptions = {
           await dbUser.save()
         }
 
-        result = { ...token, id, username: profile.login, role: dbUser.role }
+        result = { ...token, id, username: profile?.login as any, role: dbUser.role }
       }
 
       return result

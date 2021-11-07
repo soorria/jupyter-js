@@ -1,10 +1,9 @@
-import mongoose, { Document } from 'mongoose'
+import mongoose from 'mongoose'
 import { nc } from '#src/lib/api'
 import { ensureAuth } from '#src/lib/api/middleware'
 import { Note } from '#src/lib/db/models'
 import HTTPError from '#src/lib/api/errors'
 import ICell, { VALID_CELL_TYPES } from '#src/types/Cell'
-import INote from '#src/types/Note'
 import { nanoid } from 'nanoid'
 import { getNumCellsByUser } from '#src/lib/db/aggregates'
 import { CELL_LIMITS } from '#src/config'
@@ -35,7 +34,7 @@ export default nc()
       )
     }
 
-    const note: Document & INote = await Note.findOne({ _id: noteId, owner: req.user!.id })
+    const note = await Note.findOne({ _id: noteId, owner: req.user!.id })
 
     if (!note) {
       throw new HTTPError(404)

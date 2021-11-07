@@ -43,7 +43,7 @@ const AddCell: React.FC<AddCellProps> = ({ prevCellId, noteId, expanded = false 
       })
       // await trigger(`/api/notes/${noteId}`, true)
     } catch (err) {
-      if (err.isAxiosError) {
+      if ((err as any).isAxiosError) {
         const error = err as AxiosError
         if (error.response?.status === 403) {
           toast({

@@ -109,7 +109,7 @@ const Footer: React.FC<FooterProps> = memo(() => {
           divider={<StackDivider />}
           justify="center"
         >
-          <Link isExternal href="https://mooth.tech" role="group">
+          <Link isExternal href="https://mooth.tech?ref=jjs.mooth.tech" role="group">
             <Image
               src="https://mooth.tech/logo.svg"
               w={4}

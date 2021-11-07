@@ -31,7 +31,7 @@ const bundle = async (inputCode: string): Promise<BuildResult> => {
   const service = cache.service
 
   try {
-    const start = Date.now()
+    const start = performance.now()
     const result = await service.build({
       target: ['es2015'],
       plugins: [unpkgPlugin(inputCode)],
@@ -45,16 +45,15 @@ const bundle = async (inputCode: string): Promise<BuildResult> => {
       jsxFactory: '__esbuild_createElement',
       jsxFragment: '__esbuild_Fragment',
     })
-    console.log({ inputCode })
 
     return {
-      time: Date.now() - start,
+      time: performance.now() - start,
       code: result.outputFiles[0].text,
     }
   } catch (err) {
     return {
       code: '',
-      error: err.message,
+      error: (err as any).message,
     }
   }
 }

@@ -30,8 +30,6 @@ const BillingTab: React.FC = () => {
       const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY)
 
       await stripe?.redirectToCheckout({ sessionId })
-    } catch (err) {
-      console.log(err, err.response)
     } finally {
       setCheckoutLoading(false)
     }
