@@ -7,7 +7,7 @@ export default class CustomDocument extends NextDocument {
       <Html lang="en">
         <Head>
           <meta charSet="UTF-8" />
-          <link rel="shortcut icon" href="https://mooth.tech/favicon.ico" type="image/x-icon" />
+          <link rel="shortcut icon" href="https://soorria.com/favicon.ico" type="image/x-icon" />
           <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link
             href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,400&family=Poppins:wght@400;700;900&display=swap"

@@ -98,7 +98,7 @@ const Footer: React.FC<FooterProps> = memo(() => {
             onClick={changeHeartColor}
           />{' '}
           by{' '}
-          <Link isExternal href="https://mooth.tech">
+          <Link isExternal href="https://soorria.com">
             Soorria Saruva
           </Link>
         </Text>
@@ -109,9 +109,9 @@ const Footer: React.FC<FooterProps> = memo(() => {
           divider={<StackDivider />}
           justify="center"
         >
-          <Link isExternal href="https://mooth.tech?ref=jjs.mooth.tech" role="group">
+          <Link isExternal href="https://soorria.com?ref=jjs.mooth.tech" role="group">
             <Image
-              src="https://mooth.tech/logo.svg"
+              src="https://soorria.com/logo.svg"
               w={4}
               h={4}
               display="inline-block"
@@ -119,13 +119,13 @@ const Footer: React.FC<FooterProps> = memo(() => {
               transition="all 150ms ease-in-out"
               _groupHover={{ transform: 'rotate(180deg)' }}
             />
-            mooth.tech
+            soorria.com
           </Link>
-          <Link isExternal href="https://github.com/mo0th">
+          <Link isExternal href="https://github.com/soorria">
             <Icon mr={2} as={FiGithub} />
-            mo0th
+            soorria
           </Link>
-          <Link isExternal href="https://github.com/mo0th/jupyter-js">
+          <Link isExternal href="https://github.com/soorria/jupyter-js">
             <Icon mr={2} as={FiCode} />
             Source Code
           </Link>

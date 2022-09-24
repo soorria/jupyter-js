@@ -1,3 +1,3 @@
 # jupyter.js
 
-Live link: [https://jjs.mooth.tech](https://jjs.mooth.tech)
+Live link: [https://jjs.soorria.com](https://jjs.soorria.com)

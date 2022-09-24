@@ -107,7 +107,7 @@ const UsageTab: React.FC<UsageTabProps> = () => {
             </Button>
           </Link>
         ) : (
-          <Button as={ChakraLink} variant="gradientBorder" href="https://mooth.tech/#contact">
+          <Button as={ChakraLink} variant="gradientBorder" href="https://soorria.com/#contact">
             Contact Me
           </Button>
         )}
